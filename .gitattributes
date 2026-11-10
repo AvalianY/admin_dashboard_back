@@ -1,0 +1,2 @@
+# Preserve synthetic source hashes across checkout platforms.
+data/demo/*.json text eol=lf

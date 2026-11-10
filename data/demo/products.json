@@ -1,0 +1,542 @@
+[
+  {
+    "id": "demo-product-001",
+    "name": "Demo Product 001",
+    "photo": "https://assets.example.test/products/001.png",
+    "suppliers": "Demo Company 01",
+    "stock": "0",
+    "price": "1,000.25",
+    "category": "Heart"
+  },
+  {
+    "id": "demo-product-002",
+    "name": "Demo Product 002",
+    "photo": "https://assets.example.test/products/002.png",
+    "suppliers": "Demo Company 02",
+    "stock": "1",
+    "price": "11.25",
+    "category": "Leg"
+  },
+  {
+    "id": "demo-product-003",
+    "name": "Demo Product 003",
+    "photo": "https://assets.example.test/products/003.png",
+    "suppliers": "Demo Company 03",
+    "stock": "2",
+    "price": "12.25",
+    "category": "Heart"
+  },
+  {
+    "id": "demo-product-004",
+    "name": "Demo Product 004",
+    "photo": "https://assets.example.test/products/004.png",
+    "suppliers": "Demo Company 04",
+    "stock": "3",
+    "price": "13.25",
+    "category": "Leg"
+  },
+  {
+    "id": "demo-product-005",
+    "name": "Demo Product 005",
+    "photo": "https://assets.example.test/products/005.png",
+    "suppliers": "Demo Company 05",
+    "stock": "4",
+    "price": "14.25",
+    "category": "Heart"
+  },
+  {
+    "id": "demo-product-006",
+    "name": "Demo Product 006",
+    "photo": "https://assets.example.test/products/006.png",
+    "suppliers": "Demo Company 01",
+    "stock": "5",
+    "price": "15.25",
+    "category": "Leg"
+  },
+  {
+    "id": "demo-product-007",
+    "name": "Demo Product 007",
+    "photo": "https://assets.example.test/products/007.png",
+    "suppliers": "Demo Company 02",
+    "stock": "6",
+    "price": "16.25",
+    "category": "Heart"
+  },
+  {
+    "id": "demo-product-008",
+    "name": "Demo Product 008",
+    "photo": "https://assets.example.test/products/008.png",
+    "suppliers": "Demo Company 03",
+    "stock": "0",
+    "price": "17.25",
+    "category": "Leg"
+  },
+  {
+    "id": "demo-product-009",
+    "name": "Demo Product 009",
+    "photo": "https://assets.example.test/products/009.png",
+    "suppliers": "Demo Company 04",
+    "stock": "1",
+    "price": "18.25",
+    "category": "Heart"
+  },
+  {
+    "id": "demo-product-010",
+    "name": "Demo Product 010",
+    "photo": "https://assets.example.test/products/010.png",
+    "suppliers": "Demo Company 05",
+    "stock": "2",
+    "price": "19.25",
+    "category": "Leg"
+  },
+  {
+    "id": "demo-product-011",
+    "name": "Demo Product 011",
+    "photo": "https://assets.example.test/products/011.png",
+    "suppliers": "Demo Company 01",
+    "stock": "3",
+    "price": "20.25",
+    "category": "Heart"
+  },
+  {
+    "id": "demo-product-012",
+    "name": "Demo Product 012",
+    "photo": "https://assets.example.test/products/012.png",
+    "suppliers": "Demo Company 02",
+    "stock": "4",
+    "price": "21.25",
+    "category": "Leg"
+  },
+  {
+    "id": "demo-product-013",
+    "name": "Demo Product 013",
+    "photo": "https://assets.example.test/products/013.png",
+    "suppliers": "Demo Company 03",
+    "stock": "5",
+    "price": "22.25",
+    "category": "Medicine"
+  },
+  {
+    "id": "demo-product-014",
+    "name": "Demo Product 014",
+    "photo": "https://assets.example.test/products/014.png",
+    "suppliers": "Demo Company 04",
+    "stock": "6",
+    "price": "23.25",
+    "category": "Head"
+  },
+  {
+    "id": "demo-product-015",
+    "name": "Demo Product 015",
+    "photo": "https://assets.example.test/products/015.png",
+    "suppliers": "Demo Company 05",
+    "stock": "0",
+    "price": "24.25",
+    "category": "Hand"
+  },
+  {
+    "id": "demo-product-016",
+    "name": "Demo Product 016",
+    "photo": "https://assets.example.test/products/016.png",
+    "suppliers": "Demo Company 01",
+    "stock": "1",
+    "price": "25.25",
+    "category": "Dental Care"
+  },
+  {
+    "id": "demo-product-017",
+    "name": "Demo Product 017",
+    "photo": "https://assets.example.test/products/017.png",
+    "suppliers": "Demo Company 02",
+    "stock": "2",
+    "price": "26.25",
+    "category": "Skin Care"
+  },
+  {
+    "id": "demo-product-018",
+    "name": "Demo Product 018",
+    "photo": "https://assets.example.test/products/018.png",
+    "suppliers": "Demo Company 03",
+    "stock": "3",
+    "price": "27.25",
+    "category": "Eye Care"
+  },
+  {
+    "id": "demo-product-019",
+    "name": "Demo Product 019",
+    "photo": "https://assets.example.test/products/019.png",
+    "suppliers": "Demo Company 04",
+    "stock": "4",
+    "price": "28.25",
+    "category": "Vitamins & Supplements"
+  },
+  {
+    "id": "demo-product-020",
+    "name": "Demo Product 020",
+    "photo": "https://assets.example.test/products/020.png",
+    "suppliers": "Demo Company 05",
+    "stock": "5",
+    "price": "29.25",
+    "category": "Orthopedic Products"
+  },
+  {
+    "id": "demo-product-021",
+    "name": "Demo Product 021",
+    "photo": "https://assets.example.test/products/021.png",
+    "suppliers": "Demo Company 01",
+    "stock": "6",
+    "price": "30.25",
+    "category": "Baby Care"
+  },
+  {
+    "id": "demo-product-022",
+    "name": "Demo Product 022",
+    "photo": "https://assets.example.test/products/022.png",
+    "suppliers": "Demo Company 02",
+    "stock": "0",
+    "price": "31.25",
+    "category": "Medicine"
+  },
+  {
+    "id": "demo-product-023",
+    "name": "Demo Product 023",
+    "photo": "https://assets.example.test/products/023.png",
+    "suppliers": "Demo Company 03",
+    "stock": "1",
+    "price": "32.25",
+    "category": "Head"
+  },
+  {
+    "id": "demo-product-024",
+    "name": "Demo Product 024",
+    "photo": "https://assets.example.test/products/024.png",
+    "suppliers": "Demo Company 04",
+    "stock": "2",
+    "price": "33.25",
+    "category": "Hand"
+  },
+  {
+    "id": "demo-product-025",
+    "name": "Demo Product 025",
+    "photo": "https://assets.example.test/products/025.png",
+    "suppliers": "Demo Company 05",
+    "stock": "3",
+    "price": "34.25",
+    "category": "Dental Care"
+  },
+  {
+    "id": "demo-product-026",
+    "name": "Demo Product 026",
+    "photo": "https://assets.example.test/products/026.png",
+    "suppliers": "Demo Company 01",
+    "stock": "4",
+    "price": "35.25",
+    "category": "Skin Care"
+  },
+  {
+    "id": "demo-product-027",
+    "name": "Demo Product 027",
+    "photo": "https://assets.example.test/products/027.png",
+    "suppliers": "Demo Company 02",
+    "stock": "5",
+    "price": "36.25",
+    "category": "Eye Care"
+  },
+  {
+    "id": "demo-product-028",
+    "name": "Demo Product 028",
+    "photo": "https://assets.example.test/products/028.png",
+    "suppliers": "Demo Company 03",
+    "stock": "6",
+    "price": "37.25",
+    "category": "Vitamins & Supplements"
+  },
+  {
+    "id": "demo-product-029",
+    "name": "Demo Product 029",
+    "photo": "https://assets.example.test/products/029.png",
+    "suppliers": "Demo Company 04",
+    "stock": "0",
+    "price": "38.25",
+    "category": "Orthopedic Products"
+  },
+  {
+    "id": "demo-product-030",
+    "name": "Demo Product 030",
+    "photo": "https://assets.example.test/products/030.png",
+    "suppliers": "Demo Company 05",
+    "stock": "1",
+    "price": "39.25",
+    "category": "Baby Care"
+  },
+  {
+    "id": "demo-product-001",
+    "name": "Demo Product 001",
+    "photo": "https://assets.example.test/products/001.png",
+    "suppliers": "Demo Company 01",
+    "stock": "0",
+    "price": "1,000.25",
+    "category": "Heart"
+  },
+  {
+    "id": "demo-product-002",
+    "name": "Demo Product 002",
+    "photo": "https://assets.example.test/products/002.png",
+    "suppliers": "Demo Company 02",
+    "stock": "1",
+    "price": "11.25",
+    "category": "Leg"
+  },
+  {
+    "id": "demo-product-003",
+    "name": "Demo Product 003",
+    "photo": "https://assets.example.test/products/003.png",
+    "suppliers": "Demo Company 03",
+    "stock": "2",
+    "price": "12.25",
+    "category": "Heart"
+  },
+  {
+    "id": "demo-product-004",
+    "name": "Demo Product 004",
+    "photo": "https://assets.example.test/products/004.png",
+    "suppliers": "Demo Company 04",
+    "stock": "3",
+    "price": "13.25",
+    "category": "Leg"
+  },
+  {
+    "id": "demo-product-005",
+    "name": "Demo Product 005",
+    "photo": "https://assets.example.test/products/005.png",
+    "suppliers": "Demo Company 05",
+    "stock": "4",
+    "price": "14.25",
+    "category": "Heart"
+  },
+  {
+    "id": "demo-product-006",
+    "name": "Demo Product 006",
+    "photo": "https://assets.example.test/products/006.png",
+    "suppliers": "Demo Company 01",
+    "stock": "5",
+    "price": "15.25",
+    "category": "Leg"
+  },
+  {
+    "id": "demo-product-007",
+    "name": "Demo Product 007",
+    "photo": "https://assets.example.test/products/007.png",
+    "suppliers": "Demo Company 02",
+    "stock": "6",
+    "price": "16.25",
+    "category": "Heart"
+  },
+  {
+    "id": "demo-product-008",
+    "name": "Demo Product 008",
+    "photo": "https://assets.example.test/products/008.png",
+    "suppliers": "Demo Company 03",
+    "stock": "0",
+    "price": "17.25",
+    "category": "Leg"
+  },
+  {
+    "id": "demo-product-009",
+    "name": "Demo Product 009",
+    "photo": "https://assets.example.test/products/009.png",
+    "suppliers": "Demo Company 04",
+    "stock": "1",
+    "price": "18.25",
+    "category": "Heart"
+  },
+  {
+    "id": "demo-product-010",
+    "name": "Demo Product 010",
+    "photo": "https://assets.example.test/products/010.png",
+    "suppliers": "Demo Company 05",
+    "stock": "2",
+    "price": "19.25",
+    "category": "Leg"
+  },
+  {
+    "id": "demo-product-011",
+    "name": "Demo Product 011",
+    "photo": "https://assets.example.test/products/011.png",
+    "suppliers": "Demo Company 01",
+    "stock": "3",
+    "price": "20.25",
+    "category": "Heart"
+  },
+  {
+    "id": "demo-product-012",
+    "name": "Demo Product 012",
+    "photo": "https://assets.example.test/products/012.png",
+    "suppliers": "Demo Company 02",
+    "stock": "4",
+    "price": "21.25",
+    "category": "Leg"
+  },
+  {
+    "id": "demo-product-013",
+    "name": "Demo Product 013",
+    "photo": "https://assets.example.test/products/013.png",
+    "suppliers": "Demo Company 03",
+    "stock": "5",
+    "price": "22.25",
+    "category": "Medicine"
+  },
+  {
+    "id": "demo-product-014",
+    "name": "Demo Product 014",
+    "photo": "https://assets.example.test/products/014.png",
+    "suppliers": "Demo Company 04",
+    "stock": "6",
+    "price": "23.25",
+    "category": "Head"
+  },
+  {
+    "id": "demo-product-015",
+    "name": "Demo Product 015",
+    "photo": "https://assets.example.test/products/015.png",
+    "suppliers": "Demo Company 05",
+    "stock": "0",
+    "price": "24.25",
+    "category": "Hand"
+  },
+  {
+    "id": "demo-product-016",
+    "name": "Demo Product 016",
+    "photo": "https://assets.example.test/products/016.png",
+    "suppliers": "Demo Company 01",
+    "stock": "1",
+    "price": "25.25",
+    "category": "Dental Care"
+  },
+  {
+    "id": "demo-product-017",
+    "name": "Demo Product 017",
+    "photo": "https://assets.example.test/products/017.png",
+    "suppliers": "Demo Company 02",
+    "stock": "2",
+    "price": "26.25",
+    "category": "Skin Care"
+  },
+  {
+    "id": "demo-product-018",
+    "name": "Demo Product 018",
+    "photo": "https://assets.example.test/products/018.png",
+    "suppliers": "Demo Company 03",
+    "stock": "3",
+    "price": "27.25",
+    "category": "Eye Care"
+  },
+  {
+    "id": "demo-product-019",
+    "name": "Demo Product 019",
+    "photo": "https://assets.example.test/products/019.png",
+    "suppliers": "Demo Company 04",
+    "stock": "4",
+    "price": "28.25",
+    "category": "Vitamins & Supplements"
+  },
+  {
+    "id": "demo-product-020",
+    "name": "Demo Product 020",
+    "photo": "https://assets.example.test/products/020.png",
+    "suppliers": "Demo Company 05",
+    "stock": "5",
+    "price": "29.25",
+    "category": "Orthopedic Products"
+  },
+  {
+    "id": "demo-product-021",
+    "name": "Demo Product 021",
+    "photo": "https://assets.example.test/products/021.png",
+    "suppliers": "Demo Company 01",
+    "stock": "6",
+    "price": "30.25",
+    "category": "Baby Care"
+  },
+  {
+    "id": "demo-product-022",
+    "name": "Demo Product 022",
+    "photo": "https://assets.example.test/products/022.png",
+    "suppliers": "Demo Company 02",
+    "stock": "0",
+    "price": "31.25",
+    "category": "Medicine"
+  },
+  {
+    "id": "demo-product-023",
+    "name": "Demo Product 023",
+    "photo": "https://assets.example.test/products/023.png",
+    "suppliers": "Demo Company 03",
+    "stock": "1",
+    "price": "32.25",
+    "category": "Head"
+  },
+  {
+    "id": "demo-product-024",
+    "name": "Demo Product 024",
+    "photo": "https://assets.example.test/products/024.png",
+    "suppliers": "Demo Company 04",
+    "stock": "2",
+    "price": "33.25",
+    "category": "Hand"
+  },
+  {
+    "id": "demo-product-025",
+    "name": "Demo Product 025",
+    "photo": "https://assets.example.test/products/025.png",
+    "suppliers": "Demo Company 05",
+    "stock": "3",
+    "price": "34.25",
+    "category": "Dental Care"
+  },
+  {
+    "id": "demo-product-026",
+    "name": "Demo Product 026",
+    "photo": "https://assets.example.test/products/026.png",
+    "suppliers": "Demo Company 01",
+    "stock": "4",
+    "price": "35.25",
+    "category": "Skin Care"
+  },
+  {
+    "id": "demo-product-027",
+    "name": "Demo Product 027",
+    "photo": "https://assets.example.test/products/027.png",
+    "suppliers": "Demo Company 02",
+    "stock": "5",
+    "price": "36.25",
+    "category": "Eye Care"
+  },
+  {
+    "id": "demo-product-028",
+    "name": "Demo Product 028",
+    "photo": "https://assets.example.test/products/028.png",
+    "suppliers": "Demo Company 03",
+    "stock": "6",
+    "price": "37.25",
+    "category": "Vitamins & Supplements"
+  },
+  {
+    "id": "demo-product-029",
+    "name": "Demo Product 029",
+    "photo": "https://assets.example.test/products/029.png",
+    "suppliers": "Demo Company 04",
+    "stock": "0",
+    "price": "38.25",
+    "category": "Orthopedic Products"
+  },
+  {
+    "id": "demo-product-030",
+    "name": "Demo Product 030",
+    "photo": "https://assets.example.test/products/030.png",
+    "suppliers": "Demo Company 05",
+    "stock": "1",
+    "price": "39.25",
+    "category": "Baby Care"
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "kind": "synthetic",
+  "versionPrefix": "demo-v1",
+  "description": "Fictional, deterministic fixtures generated without reading the private E-Pharmacy source. Not original customer or business records.",
+  "files": {
+    "products.json": {
+      "sha256": "59d2c920f1e613821fc023184f9b2435624b46b790a303e4eaea807dfb6c94fd",
+      "records": 60
+    },
+    "suppliers.json": {
+      "sha256": "44b87c30a635b53fd35c02bfb80307e0fd4b2fd94f7d613913a66f1a62395ed2",
+      "records": 5
+    },
+    "customers.json": {
+      "sha256": "a7afec5f008aa7614dc7f3b417fc3448ff577cc2b22e302fd05362f3b5be0add",
+      "records": 88
+    },
+    "orders.json": {
+      "sha256": "9f2a44dd79af793630e9481d7f4a418bb1ce1983249abc452e7e00a98185a87d",
+      "records": 25
+    },
+    "Income-Expenses.json": {
+      "sha256": "fa9f2588c15fe4edfabe5ad46e90eaca885209ac51dbc6b0c9c2533c0590c3fb",
+      "records": 12
+    }
+  }
+}

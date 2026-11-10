@@ -1,0 +1,37 @@
+{
+  "archiveSha256": "80c20fff5889490bfe9a5135f795a2c64190395b6d89e24035b11ba9d5611efe",
+  "files": {
+    "customers.json": {
+      "sha256": "a38c154f1dd8ae726afc6570f29f935633efaa04db9cc2f2af1fe1ebcb01cf82",
+      "records": 88
+    },
+    "Income-Expenses.json": {
+      "sha256": "887875172d97422e16e41b6397445f0e9dd0b8829cc75126ea3ce4715a0e76ec",
+      "records": 12
+    },
+    "nearest_pharmacies.json": {
+      "sha256": "0064e791fd700bdeda31eb288a3b4158fa82fc21f2f3de8aad80436b891dc833",
+      "records": 9
+    },
+    "orders.json": {
+      "sha256": "0347e6921fa993d46d078529d50d0d9fe181027fbb70b340fe1e1264a3e436d9",
+      "records": 25
+    },
+    "pharmacies.json": {
+      "sha256": "beeb07132ba28dfae34f397de72b32c215d81e517fa9c0148dd993b0055542cc",
+      "records": 20
+    },
+    "products.json": {
+      "sha256": "10641491dc9d673ac0f83e02ca0ab9c1d102db78df07c4170bce5b908895a4e3",
+      "records": 60
+    },
+    "reviews.json": {
+      "sha256": "38d129017c561be84a3e0b51209d682692a03e62e119601db408fe444559d12a",
+      "records": 3
+    },
+    "suppliers.json": {
+      "sha256": "b7a1914363d5a4811eca769bf2c0545766599cabc15244ef2e7733ccf072dc6f",
+      "records": 5
+    }
+  }
+}

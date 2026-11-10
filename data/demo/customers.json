@@ -1,0 +1,794 @@
+[
+  {
+    "name": "Demo Customer 001",
+    "email": "customer001@example.test",
+    "address": "Fictional Customer Address 001 (TEST ONLY)",
+    "phone": "TEST-PHONE-001",
+    "spent": "0.50",
+    "register_date": "January 1, 2023",
+    "photo": "https://assets.example.test/customers/001.png"
+  },
+  {
+    "name": "Demo Customer 002",
+    "email": "customer002@example.test",
+    "address": "Fictional Customer Address 002 (TEST ONLY)",
+    "phone": "TEST-PHONE-002",
+    "spent": "10.50",
+    "register_date": "January 2, 2023",
+    "photo": "https://assets.example.test/customers/002.png"
+  },
+  {
+    "name": "Demo Customer 003",
+    "email": "customer003@example.test",
+    "address": "Fictional Customer Address 003 (TEST ONLY)",
+    "phone": "TEST-PHONE-003",
+    "spent": "20.50",
+    "register_date": "January 3, 2023",
+    "photo": "https://assets.example.test/customers/003.png"
+  },
+  {
+    "name": "Demo Customer 004",
+    "email": "customer004@example.test",
+    "address": "Fictional Customer Address 004 (TEST ONLY)",
+    "phone": "TEST-PHONE-004",
+    "spent": "30.50",
+    "register_date": "January 4, 2023",
+    "photo": "https://assets.example.test/customers/004.png"
+  },
+  {
+    "name": "Demo Customer 005",
+    "email": "customer005@example.test",
+    "address": "Fictional Customer Address 005 (TEST ONLY)",
+    "phone": "TEST-PHONE-005",
+    "spent": "40.50",
+    "register_date": "January 5, 2023",
+    "photo": "https://assets.example.test/customers/005.png"
+  },
+  {
+    "name": "Demo Customer 006",
+    "email": "customer006@example.test",
+    "address": "Fictional Customer Address 006 (TEST ONLY)",
+    "phone": "TEST-PHONE-006",
+    "spent": "50.50",
+    "register_date": "January 6, 2023",
+    "photo": "https://assets.example.test/customers/006.png"
+  },
+  {
+    "name": "Demo Customer 007",
+    "email": "customer007@example.test",
+    "address": "Fictional Customer Address 007 (TEST ONLY)",
+    "phone": "TEST-PHONE-007",
+    "spent": "60.50",
+    "register_date": "January 7, 2023",
+    "photo": "https://assets.example.test/customers/007.png"
+  },
+  {
+    "name": "Demo Customer 008",
+    "email": "customer008@example.test",
+    "address": "Fictional Customer Address 008 (TEST ONLY)",
+    "phone": "TEST-PHONE-008",
+    "spent": "70.50",
+    "register_date": "January 8, 2023",
+    "photo": "https://assets.example.test/customers/008.png"
+  },
+  {
+    "name": "Demo Customer 009",
+    "email": "customer009@example.test",
+    "address": "Fictional Customer Address 009 (TEST ONLY)",
+    "phone": "TEST-PHONE-009",
+    "spent": "80.50",
+    "register_date": "January 9, 2023",
+    "photo": "https://assets.example.test/customers/009.png"
+  },
+  {
+    "name": "Demo Customer 010",
+    "email": "customer010@example.test",
+    "address": "Fictional Customer Address 010 (TEST ONLY)",
+    "phone": "TEST-PHONE-010",
+    "spent": "90.50",
+    "register_date": "January 10, 2023",
+    "image": "https://assets.example.test/customers/010.png"
+  },
+  {
+    "name": "Demo Customer 011",
+    "email": "customer011@example.test",
+    "address": "Fictional Customer Address 011 (TEST ONLY)",
+    "phone": "TEST-PHONE-011",
+    "spent": "100.50",
+    "register_date": "January 11, 2023",
+    "image": "https://assets.example.test/customers/011.png"
+  },
+  {
+    "name": "Demo Customer 012",
+    "email": "customer012@example.test",
+    "address": "Fictional Customer Address 012 (TEST ONLY)",
+    "phone": "TEST-PHONE-012",
+    "spent": "110.50",
+    "register_date": "January 12, 2023",
+    "image": "https://assets.example.test/customers/012.png"
+  },
+  {
+    "name": "Demo Customer 013",
+    "email": "customer013@example.test",
+    "address": "Fictional Customer Address 013 (TEST ONLY)",
+    "phone": "TEST-PHONE-013",
+    "spent": "120.50",
+    "register_date": "January 13, 2023",
+    "image": "https://assets.example.test/customers/013.png"
+  },
+  {
+    "name": "Demo Customer 014",
+    "email": "customer014@example.test",
+    "address": "Fictional Customer Address 014 (TEST ONLY)",
+    "phone": "TEST-PHONE-014",
+    "spent": "130.50",
+    "register_date": "January 14, 2023",
+    "image": "https://assets.example.test/customers/014.png"
+  },
+  {
+    "name": "Demo Customer 015",
+    "email": "customer015@example.test",
+    "address": "Fictional Customer Address 015 (TEST ONLY)",
+    "phone": "TEST-PHONE-015",
+    "spent": "140.50",
+    "register_date": "January 15, 2023",
+    "image": "https://assets.example.test/customers/015.png"
+  },
+  {
+    "name": "Demo Customer 016",
+    "email": "customer016@example.test",
+    "address": "Fictional Customer Address 016 (TEST ONLY)",
+    "phone": "TEST-PHONE-016",
+    "spent": "150.50",
+    "register_date": "January 16, 2023",
+    "image": "https://assets.example.test/customers/016.png"
+  },
+  {
+    "name": "Demo Customer 017",
+    "email": "customer017@example.test",
+    "address": "Fictional Customer Address 017 (TEST ONLY)",
+    "phone": "TEST-PHONE-017",
+    "spent": "160.50",
+    "register_date": "January 17, 2023",
+    "image": "https://assets.example.test/customers/017.png"
+  },
+  {
+    "name": "Demo Customer 018",
+    "email": "customer018@example.test",
+    "address": "Fictional Customer Address 018 (TEST ONLY)",
+    "phone": "TEST-PHONE-018",
+    "spent": "170.50",
+    "register_date": "January 18, 2023",
+    "image": "https://assets.example.test/customers/018.png"
+  },
+  {
+    "name": "Demo Customer 019",
+    "email": "customer019@example.test",
+    "address": "Fictional Customer Address 019 (TEST ONLY)",
+    "phone": "TEST-PHONE-019",
+    "spent": "180.50",
+    "register_date": "January 19, 2023",
+    "image": "https://assets.example.test/customers/019.png"
+  },
+  {
+    "name": "Demo Customer 020",
+    "email": "customer020@example.test",
+    "address": "Fictional Customer Address 020 (TEST ONLY)",
+    "phone": "TEST-PHONE-020",
+    "spent": "190.50",
+    "register_date": "January 20, 2023",
+    "image": "https://assets.example.test/customers/020.png"
+  },
+  {
+    "name": "Demo Customer 021",
+    "email": "customer021@example.test",
+    "address": "Fictional Customer Address 021 (TEST ONLY)",
+    "phone": "TEST-PHONE-021",
+    "spent": "200.50",
+    "register_date": "January 21, 2023",
+    "image": "https://assets.example.test/customers/021.png"
+  },
+  {
+    "name": "Demo Customer 022",
+    "email": "customer022@example.test",
+    "address": "Fictional Customer Address 022 (TEST ONLY)",
+    "phone": "TEST-PHONE-022",
+    "spent": "210.50",
+    "register_date": "January 22, 2023",
+    "image": "https://assets.example.test/customers/022.png"
+  },
+  {
+    "name": "Demo Customer 023",
+    "email": "customer023@example.test",
+    "address": "Fictional Customer Address 023 (TEST ONLY)",
+    "phone": "TEST-PHONE-023",
+    "spent": "220.50",
+    "register_date": "January 23, 2023",
+    "image": "https://assets.example.test/customers/023.png"
+  },
+  {
+    "name": "Demo Customer 024",
+    "email": "customer024@example.test",
+    "address": "Fictional Customer Address 024 (TEST ONLY)",
+    "phone": "TEST-PHONE-024",
+    "spent": "230.50",
+    "register_date": "January 24, 2023",
+    "image": "https://assets.example.test/customers/024.png"
+  },
+  {
+    "name": "Demo Customer 025",
+    "email": "customer025@example.test",
+    "address": "Fictional Customer Address 025 (TEST ONLY)",
+    "phone": "TEST-PHONE-025",
+    "spent": "240.50",
+    "register_date": "January 25, 2023",
+    "image": "https://assets.example.test/customers/025.png"
+  },
+  {
+    "name": "Demo Customer 026",
+    "email": "customer026@example.test",
+    "address": "Fictional Customer Address 026 (TEST ONLY)",
+    "phone": "TEST-PHONE-026",
+    "spent": "250.50",
+    "register_date": "January 26, 2023",
+    "image": "https://assets.example.test/customers/026.png"
+  },
+  {
+    "name": "Demo Customer 027",
+    "email": "customer027@example.test",
+    "address": "Fictional Customer Address 027 (TEST ONLY)",
+    "phone": "TEST-PHONE-027",
+    "spent": "260.50",
+    "register_date": "January 27, 2023",
+    "image": "https://assets.example.test/customers/027.png"
+  },
+  {
+    "name": "Demo Customer 028",
+    "email": "customer028@example.test",
+    "address": "Fictional Customer Address 028 (TEST ONLY)",
+    "phone": "TEST-PHONE-028",
+    "spent": "270.50",
+    "register_date": "January 28, 2023",
+    "image": "https://assets.example.test/customers/028.png"
+  },
+  {
+    "name": "Demo Customer 029",
+    "email": "customer029@example.test",
+    "address": "Fictional Customer Address 029 (TEST ONLY)",
+    "phone": "TEST-PHONE-029",
+    "spent": "280.50",
+    "register_date": "January 29, 2023",
+    "image": "https://assets.example.test/customers/029.png"
+  },
+  {
+    "name": "Demo Customer 030",
+    "email": "customer030@example.test",
+    "address": "Fictional Customer Address 030 (TEST ONLY)",
+    "phone": "TEST-PHONE-030",
+    "spent": "290.50",
+    "register_date": "January 30, 2023",
+    "image": "https://assets.example.test/customers/030.png"
+  },
+  {
+    "name": "Demo Customer 031",
+    "email": "customer031@example.test",
+    "address": "Fictional Customer Address 031 (TEST ONLY)",
+    "phone": "TEST-PHONE-031",
+    "spent": "300.50",
+    "register_date": "January 31, 2023",
+    "image": "https://assets.example.test/customers/031.png"
+  },
+  {
+    "name": "Demo Customer 032",
+    "email": "customer032@example.test",
+    "address": "Fictional Customer Address 032 (TEST ONLY)",
+    "phone": "TEST-PHONE-032",
+    "spent": "310.50",
+    "register_date": "February 1, 2023",
+    "image": "https://assets.example.test/customers/032.png"
+  },
+  {
+    "name": "Demo Customer 033",
+    "email": "customer033@example.test",
+    "address": "Fictional Customer Address 033 (TEST ONLY)",
+    "phone": "TEST-PHONE-033",
+    "spent": "320.50",
+    "register_date": "February 2, 2023",
+    "image": "https://assets.example.test/customers/033.png"
+  },
+  {
+    "name": "Demo Customer 034",
+    "email": "customer034@example.test",
+    "address": "Fictional Customer Address 034 (TEST ONLY)",
+    "phone": "TEST-PHONE-034",
+    "spent": "330.50",
+    "register_date": "February 3, 2023",
+    "image": "https://assets.example.test/customers/034.png"
+  },
+  {
+    "name": "Demo Customer 035",
+    "email": "customer035@example.test",
+    "address": "Fictional Customer Address 035 (TEST ONLY)",
+    "phone": "TEST-PHONE-035",
+    "spent": "340.50",
+    "register_date": "February 4, 2023",
+    "image": "https://assets.example.test/customers/035.png"
+  },
+  {
+    "name": "Demo Customer 036",
+    "email": "customer036@example.test",
+    "address": "Fictional Customer Address 036 (TEST ONLY)",
+    "phone": "TEST-PHONE-036",
+    "spent": "350.50",
+    "register_date": "February 5, 2023",
+    "image": "https://assets.example.test/customers/036.png"
+  },
+  {
+    "name": "Demo Customer 037",
+    "email": "customer037@example.test",
+    "address": "Fictional Customer Address 037 (TEST ONLY)",
+    "phone": "TEST-PHONE-037",
+    "spent": "360.50",
+    "register_date": "February 6, 2023",
+    "image": "https://assets.example.test/customers/037.png"
+  },
+  {
+    "name": "Demo Customer 038",
+    "email": "customer038@example.test",
+    "address": "Fictional Customer Address 038 (TEST ONLY)",
+    "phone": "TEST-PHONE-038",
+    "spent": "370.50",
+    "register_date": "February 7, 2023",
+    "image": "https://assets.example.test/customers/038.png"
+  },
+  {
+    "name": "Demo Customer 039",
+    "email": "customer039@example.test",
+    "address": "Fictional Customer Address 039 (TEST ONLY)",
+    "phone": "TEST-PHONE-039",
+    "spent": "380.50",
+    "register_date": "February 8, 2023",
+    "image": "https://assets.example.test/customers/039.png"
+  },
+  {
+    "name": "Demo Customer 040",
+    "email": "customer040@example.test",
+    "address": "Fictional Customer Address 040 (TEST ONLY)",
+    "phone": "TEST-PHONE-040",
+    "spent": "390.50",
+    "register_date": "February 9, 2023",
+    "image": "https://assets.example.test/customers/040.png"
+  },
+  {
+    "name": "Demo Customer 041",
+    "email": "customer041@example.test",
+    "address": "Fictional Customer Address 041 (TEST ONLY)",
+    "phone": "TEST-PHONE-041",
+    "spent": "400.50",
+    "register_date": "February 10, 2023",
+    "image": "https://assets.example.test/customers/041.png"
+  },
+  {
+    "name": "Demo Customer 042",
+    "email": "customer042@example.test",
+    "address": "Fictional Customer Address 042 (TEST ONLY)",
+    "phone": "TEST-PHONE-042",
+    "spent": "410.50",
+    "register_date": "February 11, 2023",
+    "image": "https://assets.example.test/customers/042.png"
+  },
+  {
+    "name": "Demo Customer 043",
+    "email": "customer043@example.test",
+    "address": "Fictional Customer Address 043 (TEST ONLY)",
+    "phone": "TEST-PHONE-043",
+    "spent": "420.50",
+    "register_date": "February 12, 2023",
+    "image": "https://assets.example.test/customers/043.png"
+  },
+  {
+    "name": "Demo Customer 044",
+    "email": "customer044@example.test",
+    "address": "Fictional Customer Address 044 (TEST ONLY)",
+    "phone": "TEST-PHONE-044",
+    "spent": "430.50",
+    "register_date": "February 13, 2023",
+    "image": "https://assets.example.test/customers/044.png"
+  },
+  {
+    "name": "Demo Customer 045",
+    "email": "customer001@example.test",
+    "address": "Fictional Customer Address 045 (TEST ONLY)",
+    "phone": "TEST-PHONE-045",
+    "spent": "440.50",
+    "register_date": "February 14, 2023",
+    "image": "https://assets.example.test/customers/045.png"
+  },
+  {
+    "name": "Demo Customer 046",
+    "email": "customer002@example.test",
+    "address": "Fictional Customer Address 046 (TEST ONLY)",
+    "phone": "TEST-PHONE-046",
+    "spent": "450.50",
+    "register_date": "February 15, 2023",
+    "image": "https://assets.example.test/customers/046.png"
+  },
+  {
+    "name": "Demo Customer 047",
+    "email": "customer003@example.test",
+    "address": "Fictional Customer Address 047 (TEST ONLY)",
+    "phone": "TEST-PHONE-047",
+    "spent": "460.50",
+    "register_date": "February 16, 2023",
+    "image": "https://assets.example.test/customers/047.png"
+  },
+  {
+    "name": "Demo Customer 048",
+    "email": "customer004@example.test",
+    "address": "Fictional Customer Address 048 (TEST ONLY)",
+    "phone": "TEST-PHONE-048",
+    "spent": "470.50",
+    "register_date": "February 17, 2023",
+    "image": "https://assets.example.test/customers/048.png"
+  },
+  {
+    "name": "Demo Customer 049",
+    "email": "customer005@example.test",
+    "address": "Fictional Customer Address 049 (TEST ONLY)",
+    "phone": "TEST-PHONE-049",
+    "spent": "480.50",
+    "register_date": "February 18, 2023",
+    "image": "https://assets.example.test/customers/049.png"
+  },
+  {
+    "name": "Demo Customer 050",
+    "email": "customer006@example.test",
+    "address": "Fictional Customer Address 050 (TEST ONLY)",
+    "phone": "TEST-PHONE-050",
+    "spent": "490.50",
+    "register_date": "February 19, 2023",
+    "image": "https://assets.example.test/customers/050.png"
+  },
+  {
+    "name": "Demo Customer 051",
+    "email": "customer007@example.test",
+    "address": "Fictional Customer Address 051 (TEST ONLY)",
+    "phone": "TEST-PHONE-051",
+    "spent": "500.50",
+    "register_date": "February 20, 2023",
+    "image": "https://assets.example.test/customers/051.png"
+  },
+  {
+    "name": "Demo Customer 052",
+    "email": "customer008@example.test",
+    "address": "Fictional Customer Address 052 (TEST ONLY)",
+    "phone": "TEST-PHONE-052",
+    "spent": "510.50",
+    "register_date": "February 21, 2023",
+    "image": "https://assets.example.test/customers/052.png"
+  },
+  {
+    "name": "Demo Customer 053",
+    "email": "customer009@example.test",
+    "address": "Fictional Customer Address 053 (TEST ONLY)",
+    "phone": "TEST-PHONE-053",
+    "spent": "520.50",
+    "register_date": "February 22, 2023",
+    "image": "https://assets.example.test/customers/053.png"
+  },
+  {
+    "name": "Demo Customer 054",
+    "email": "customer010@example.test",
+    "address": "Fictional Customer Address 054 (TEST ONLY)",
+    "phone": "TEST-PHONE-054",
+    "spent": "530.50",
+    "register_date": "February 23, 2023",
+    "image": "https://assets.example.test/customers/054.png"
+  },
+  {
+    "name": "Demo Customer 055",
+    "email": "customer011@example.test",
+    "address": "Fictional Customer Address 055 (TEST ONLY)",
+    "phone": "TEST-PHONE-055",
+    "spent": "540.50",
+    "register_date": "February 24, 2023",
+    "image": "https://assets.example.test/customers/055.png"
+  },
+  {
+    "name": "Demo Customer 056",
+    "email": "customer012@example.test",
+    "address": "Fictional Customer Address 056 (TEST ONLY)",
+    "phone": "TEST-PHONE-056",
+    "spent": "550.50",
+    "register_date": "February 25, 2023",
+    "image": "https://assets.example.test/customers/056.png"
+  },
+  {
+    "name": "Demo Customer 057",
+    "email": "customer013@example.test",
+    "address": "Fictional Customer Address 057 (TEST ONLY)",
+    "phone": "TEST-PHONE-057",
+    "spent": "560.50",
+    "register_date": "February 26, 2023",
+    "image": "https://assets.example.test/customers/057.png"
+  },
+  {
+    "name": "Demo Customer 058",
+    "email": "customer014@example.test",
+    "address": "Fictional Customer Address 058 (TEST ONLY)",
+    "phone": "TEST-PHONE-058",
+    "spent": "570.50",
+    "register_date": "February 27, 2023",
+    "image": "https://assets.example.test/customers/058.png"
+  },
+  {
+    "name": "Demo Customer 059",
+    "email": "customer015@example.test",
+    "address": "Fictional Customer Address 059 (TEST ONLY)",
+    "phone": "TEST-PHONE-059",
+    "spent": "580.50",
+    "register_date": "February 28, 2023",
+    "image": "https://assets.example.test/customers/059.png"
+  },
+  {
+    "name": "Demo Customer 060",
+    "email": "customer016@example.test",
+    "address": "Fictional Customer Address 060 (TEST ONLY)",
+    "phone": "TEST-PHONE-060",
+    "spent": "590.50",
+    "register_date": "March 1, 2023",
+    "image": "https://assets.example.test/customers/060.png"
+  },
+  {
+    "name": "Demo Customer 061",
+    "email": "customer017@example.test",
+    "address": "Fictional Customer Address 061 (TEST ONLY)",
+    "phone": "TEST-PHONE-061",
+    "spent": "600.50",
+    "register_date": "March 2, 2023",
+    "image": "https://assets.example.test/customers/061.png"
+  },
+  {
+    "name": "Demo Customer 062",
+    "email": "customer018@example.test",
+    "address": "Fictional Customer Address 062 (TEST ONLY)",
+    "phone": "TEST-PHONE-062",
+    "spent": "610.50",
+    "register_date": "March 3, 2023",
+    "image": "https://assets.example.test/customers/062.png"
+  },
+  {
+    "name": "Demo Customer 063",
+    "email": "customer019@example.test",
+    "address": "Fictional Customer Address 063 (TEST ONLY)",
+    "phone": "TEST-PHONE-063",
+    "spent": "620.50",
+    "register_date": "March 4, 2023",
+    "image": "https://assets.example.test/customers/063.png"
+  },
+  {
+    "name": "Demo Customer 064",
+    "email": "customer020@example.test",
+    "address": "Fictional Customer Address 064 (TEST ONLY)",
+    "phone": "TEST-PHONE-064",
+    "spent": "630.50",
+    "register_date": "March 5, 2023",
+    "image": "https://assets.example.test/customers/064.png"
+  },
+  {
+    "name": "Demo Customer 065",
+    "email": "customer021@example.test",
+    "address": "Fictional Customer Address 065 (TEST ONLY)",
+    "phone": "TEST-PHONE-065",
+    "spent": "640.50",
+    "register_date": "March 6, 2023",
+    "image": "https://assets.example.test/customers/065.png"
+  },
+  {
+    "name": "Demo Customer 066",
+    "email": "customer022@example.test",
+    "address": "Fictional Customer Address 066 (TEST ONLY)",
+    "phone": "TEST-PHONE-066",
+    "spent": "650.50",
+    "register_date": "March 7, 2023",
+    "image": "https://assets.example.test/customers/066.png"
+  },
+  {
+    "name": "Demo Customer 067",
+    "email": "customer023@example.test",
+    "address": "Fictional Customer Address 067 (TEST ONLY)",
+    "phone": "TEST-PHONE-067",
+    "spent": "660.50",
+    "register_date": "March 8, 2023",
+    "image": "https://assets.example.test/customers/067.png"
+  },
+  {
+    "name": "Demo Customer 068",
+    "email": "customer024@example.test",
+    "address": "Fictional Customer Address 068 (TEST ONLY)",
+    "phone": "TEST-PHONE-068",
+    "spent": "670.50",
+    "register_date": "March 9, 2023",
+    "image": "https://assets.example.test/customers/068.png"
+  },
+  {
+    "name": "Demo Customer 069",
+    "email": "customer025@example.test",
+    "address": "Fictional Customer Address 069 (TEST ONLY)",
+    "phone": "TEST-PHONE-069",
+    "spent": "680.50",
+    "register_date": "March 10, 2023",
+    "image": "https://assets.example.test/customers/069.png"
+  },
+  {
+    "name": "Demo Customer 070",
+    "email": "customer026@example.test",
+    "address": "Fictional Customer Address 070 (TEST ONLY)",
+    "phone": "TEST-PHONE-070",
+    "spent": "690.50",
+    "register_date": "March 11, 2023",
+    "image": "https://assets.example.test/customers/070.png"
+  },
+  {
+    "name": "Demo Customer 071",
+    "email": "customer027@example.test",
+    "address": "Fictional Customer Address 071 (TEST ONLY)",
+    "phone": "TEST-PHONE-071",
+    "spent": "700.50",
+    "register_date": "March 12, 2023",
+    "image": "https://assets.example.test/customers/071.png"
+  },
+  {
+    "name": "Demo Customer 072",
+    "email": "customer028@example.test",
+    "address": "Fictional Customer Address 072 (TEST ONLY)",
+    "phone": "TEST-PHONE-072",
+    "spent": "710.50",
+    "register_date": "March 13, 2023",
+    "image": "https://assets.example.test/customers/072.png"
+  },
+  {
+    "name": "Demo Customer 073",
+    "email": "customer029@example.test",
+    "address": "Fictional Customer Address 073 (TEST ONLY)",
+    "phone": "TEST-PHONE-073",
+    "spent": "720.50",
+    "register_date": "March 14, 2023",
+    "image": "https://assets.example.test/customers/073.png"
+  },
+  {
+    "name": "Demo Customer 074",
+    "email": "customer030@example.test",
+    "address": "Fictional Customer Address 074 (TEST ONLY)",
+    "phone": "TEST-PHONE-074",
+    "spent": "730.50",
+    "register_date": "March 15, 2023",
+    "image": "https://assets.example.test/customers/074.png"
+  },
+  {
+    "name": "Demo Customer 075",
+    "email": "customer031@example.test",
+    "address": "Fictional Customer Address 075 (TEST ONLY)",
+    "phone": "TEST-PHONE-075",
+    "spent": "740.50",
+    "register_date": "March 16, 2023",
+    "image": "https://assets.example.test/customers/075.png"
+  },
+  {
+    "name": "Demo Customer 076",
+    "email": "customer032@example.test",
+    "address": "Fictional Customer Address 076 (TEST ONLY)",
+    "phone": "TEST-PHONE-076",
+    "spent": "750.50",
+    "register_date": "March 17, 2023",
+    "image": "https://assets.example.test/customers/076.png"
+  },
+  {
+    "name": "Demo Customer 077",
+    "email": "customer033@example.test",
+    "address": "Fictional Customer Address 077 (TEST ONLY)",
+    "phone": "TEST-PHONE-077",
+    "spent": "760.50",
+    "register_date": "March 18, 2023",
+    "image": "https://assets.example.test/customers/077.png"
+  },
+  {
+    "name": "Demo Customer 078",
+    "email": "customer034@example.test",
+    "address": "Fictional Customer Address 078 (TEST ONLY)",
+    "phone": "TEST-PHONE-078",
+    "spent": "770.50",
+    "register_date": "March 19, 2023",
+    "image": "https://assets.example.test/customers/078.png"
+  },
+  {
+    "name": "Demo Customer 079",
+    "email": "customer035@example.test",
+    "address": "Fictional Customer Address 079 (TEST ONLY)",
+    "phone": "TEST-PHONE-079",
+    "spent": "780.50",
+    "register_date": "March 20, 2023",
+    "image": "https://assets.example.test/customers/079.png"
+  },
+  {
+    "name": "Demo Customer 080",
+    "email": "customer036@example.test",
+    "address": "Fictional Customer Address 080 (TEST ONLY)",
+    "phone": "TEST-PHONE-080",
+    "spent": "790.50",
+    "register_date": "March 21, 2023",
+    "image": "https://assets.example.test/customers/080.png"
+  },
+  {
+    "name": "Demo Customer 081",
+    "email": "customer037@example.test",
+    "address": "Fictional Customer Address 081 (TEST ONLY)",
+    "phone": "TEST-PHONE-081",
+    "spent": "800.50",
+    "register_date": "March 22, 2023",
+    "image": "https://assets.example.test/customers/081.png"
+  },
+  {
+    "name": "Demo Customer 082",
+    "email": "customer038@example.test",
+    "address": "Fictional Customer Address 082 (TEST ONLY)",
+    "phone": "TEST-PHONE-082",
+    "spent": "810.50",
+    "register_date": "March 23, 2023",
+    "image": "https://assets.example.test/customers/082.png"
+  },
+  {
+    "name": "Demo Customer 083",
+    "email": "customer039@example.test",
+    "address": "Fictional Customer Address 083 (TEST ONLY)",
+    "phone": "TEST-PHONE-083",
+    "spent": "820.50",
+    "register_date": "March 24, 2023",
+    "image": "https://assets.example.test/customers/083.png"
+  },
+  {
+    "name": "Demo Customer 084",
+    "email": "customer040@example.test",
+    "address": "Fictional Customer Address 084 (TEST ONLY)",
+    "phone": "TEST-PHONE-084",
+    "spent": "830.50",
+    "register_date": "March 25, 2023",
+    "image": "https://assets.example.test/customers/084.png"
+  },
+  {
+    "name": "Demo Customer 085",
+    "email": "customer041@example.test",
+    "address": "Fictional Customer Address 085 (TEST ONLY)",
+    "phone": "TEST-PHONE-085",
+    "spent": "840.50",
+    "register_date": "March 26, 2023",
+    "image": "https://assets.example.test/customers/085.png"
+  },
+  {
+    "name": "Demo Customer 086",
+    "email": "customer042@example.test",
+    "address": "Fictional Customer Address 086 (TEST ONLY)",
+    "phone": "TEST-PHONE-086",
+    "spent": "850.50",
+    "register_date": "March 27, 2023",
+    "image": "https://assets.example.test/customers/086.png"
+  },
+  {
+    "name": "Demo Customer 087",
+    "email": "customer043@example.test",
+    "address": "Fictional Customer Address 087 (TEST ONLY)",
+    "phone": "TEST-PHONE-087",
+    "spent": "860.50",
+    "register_date": "March 28, 2023",
+    "image": "https://assets.example.test/customers/087.png"
+  },
+  {
+    "name": "Demo Customer 088",
+    "email": "customer044@example.test",
+    "address": "Fictional Customer Address 088 (TEST ONLY)",
+    "phone": "TEST-PHONE-088",
+    "spent": "870.50",
+    "register_date": "March 29, 2023",
+    "image": "https://assets.example.test/customers/088.png"
+  }
+]

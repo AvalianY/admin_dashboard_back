@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Demo Supplier 01",
+    "address": "Fictional Supplier Address 01 (TEST ONLY)",
+    "suppliers": "Demo Company 01",
+    "date": "January 1, 2023",
+    "amount": "৳ 1001.01",
+    "status": "Active"
+  },
+  {
+    "name": "Demo Supplier 02",
+    "address": "Fictional Supplier Address 02 (TEST ONLY)",
+    "suppliers": "Demo Company 02",
+    "date": "January 2, 2023",
+    "amount": "৳ 1002.01",
+    "status": "Deactive"
+  },
+  {
+    "name": "Demo Supplier 03",
+    "address": "Fictional Supplier Address 03 (TEST ONLY)",
+    "suppliers": "Demo Company 03",
+    "date": "January 3, 2023",
+    "amount": "৳ 1003.01",
+    "status": "Active"
+  },
+  {
+    "name": "Demo Supplier 04",
+    "address": "Fictional Supplier Address 04 (TEST ONLY)",
+    "suppliers": "Demo Company 04",
+    "date": "January 4, 2023",
+    "amount": "৳ 1004.01",
+    "status": "Deactive"
+  },
+  {
+    "name": "Demo Supplier 05",
+    "address": "Fictional Supplier Address 05 (TEST ONLY)",
+    "suppliers": "Demo Company 05",
+    "date": "January 5, 2023",
+    "amount": "৳ 1005.01",
+    "status": "Active"
+  }
+]
