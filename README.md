@@ -15,9 +15,9 @@
 [![Swagger UI](https://img.shields.io/badge/Swagger_UI-5.35.0-85EA2D?logo=swagger&logoColor=000)](#swagger-dokumentation)
 [![Deployment](https://img.shields.io/badge/Deployment-Render_Free-000000?logo=render&logoColor=white)](https://e-pharmacy-api-kz62.onrender.com)
 
-[Repository](https://github.com/AvalianY/admin_dashboard_back) · [Live API](https://e-pharmacy-api-kz62.onrender.com) · [Swagger UI](https://e-pharmacy-api-kz62.onrender.com/api-docs)
+[Repository](https://github.com/AvalianY/admin_dashboard_back) · [Live API](https://e-pharmacy-api-kz62.onrender.com) · [Swagger UI](https://e-pharmacy-api-kz62.onrender.com/api-docs/)
 
-**Swagger: Veröffentlichung ausstehend**
+**Swagger UI: online verfügbar**
 
 </div>
 
@@ -234,7 +234,7 @@ Lokal: [http://localhost:3000/api-docs](http://localhost:3000/api-docs). Die UI 
 
 Tokens werden nicht über Reloads oder Browser-Sessions hinweg gespeichert. Schreiboperationen ändern die ausgewählte Datenbank und benötigen in Produktion ein ausdrücklich genehmigtes Testfenster mit Backup und Wiederherstellung. Für Browser-Requests muss der exakte API-Origin in CORS_ORIGINS erlaubt sein; JWT bleibt für alle geschützten Operationen verpflichtend.
 
-Geplante öffentliche UI: [https://e-pharmacy-api-kz62.onrender.com/api-docs](https://e-pharmacy-api-kz62.onrender.com/api-docs). **Noch nicht veröffentlicht:** Push und Render-Deploy benötigen eine separate Freigabe. Bis dahin ist dort ein 404 möglich.
+Öffentliche Swagger UI: [https://e-pharmacy-api-kz62.onrender.com/api-docs/](https://e-pharmacy-api-kz62.onrender.com/api-docs/). Die interaktive Dokumentation ist auf Render veröffentlicht und zeigt alle 15 API-Operationen mit dem bestehenden Bearer-Schema.
 
 ## Deployment
 
@@ -242,7 +242,7 @@ Die bestehende API läuft unter [https://e-pharmacy-api-kz62.onrender.com](https
 
 `render.yaml` legt Node 26.13.0, `npm ci --include=dev && npm run build`, `npm start` und deaktivierte automatische Deploys fest. Der Server bindet nach erfolgreicher DB-Verbindung an `0.0.0.0` und den zugewiesenen PORT. Zugangsdaten werden in privaten Environment Settings hinterlegt; Init und Import gehören nicht in Build-/Start-Hooks.
 
-Render Free fährt Dienste nach Inaktivität herunter; der nächste Request kann einen Cold Start auslösen. Daten und Sessions bleiben in Atlas. Das lokale Dateisystem ist nicht dauerhaft. [Free-Limits](https://render.com/docs/free). `render.yaml` erlaubt ausschließlich `https://e-pharmacy-api-kz62.onrender.com` als Production-Origin für Swagger. Beim späteren freigegebenen Deployment denselben Wert in den tatsächlichen Render Environment Settings prüfen: Die lokale YAML-Änderung aktualisiert einen bestehenden Service nicht automatisch. Der Frontend-Origin wird erst nach seiner Freigabe ergänzt.
+Render Free fährt Dienste nach Inaktivität herunter; der nächste Request kann einen Cold Start auslösen. Daten und Sessions bleiben in Atlas. Das lokale Dateisystem ist nicht dauerhaft. [Free-Limits](https://render.com/docs/free). `render.yaml` erlaubt ausschließlich `https://e-pharmacy-api-kz62.onrender.com` als Production-Origin für Swagger. Die tatsächlichen Render Environment Settings müssen mit dieser Konfiguration übereinstimmen: Eine lokale YAML-Änderung aktualisiert einen bestehenden Service nicht automatisch. Der Frontend-Origin wird erst nach seiner Freigabe ergänzt.
 
 Ablauf, sichere Administration und Freigabegrenzen: [Deployment-Runbook](docs/free-deployment.md). Neue Veröffentlichungsschritte sind separat zu genehmigen.
 
@@ -252,7 +252,7 @@ Die öffentlichen Tests starten eigene, kurzlebige MongoDB-Instanzen und verwend
 
 Die Suite prüft Authentifizierung, Sessions, Kataloge, Dashboard, Import, Request-/Response-Verträge, Fehlerbehandlung und den tatsächlichen kompilierten Server. Swagger-Prüfungen decken HTML, lokale Assets, alle 15 Operationen, Beispiele, Bearer-Konfiguration, Token-Persistenz-Einstellungen und unveränderte CORS-/JWT-Grenzen ab.
 
-**Live-Nachweis vom 13.11.2026:** alle 15 Geschäftsoperationen, 74 HTTPS-Requests und das exakte Wiederherstellen der 190 Originaldokumente nach temporären Teständerungen — PASS. Zusätzlich wurden zuvor 49 sichere HTTPS-Szenarien einschließlich Cold Start geprüft. Die neue Swagger UI ist lokal geprüft; ein Production-Nachweis folgt erst nach ihrem gesonderten Deployment.
+**Live-Nachweis vom 13.11.2026:** alle 15 Geschäftsoperationen, 74 HTTPS-Requests und das exakte Wiederherstellen der 190 Originaldokumente nach temporären Teständerungen — PASS. Zusätzlich wurden zuvor 49 sichere HTTPS-Szenarien einschließlich Cold Start geprüft. Nach der Veröffentlichung liefern die öffentliche Swagger UI und das zugehörige OpenAPI-JSON-Dokument HTTP 200; die Spezifikation enthält alle 15 Operationen und das bestehende Bearer-Schema.
 
 Lokale Abschlussprüfung: TypeScript, ESLint und Production-Build erfolgreich; **149 öffentliche Tests** und **5 separate Originaldaten-Tests** bestanden. `npm audit` meldet **0 bekannte Schwachstellen**. Der Browser-Test des kompilierten Servers bestätigt alle 15 Swagger-Operationen, Bearer-Übertragung, Try it out und das Löschen der Autorisierung nach einem Reload.
 

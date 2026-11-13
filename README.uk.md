@@ -15,9 +15,9 @@
 [![Swagger UI](https://img.shields.io/badge/Swagger_UI-5.35.0-85EA2D?logo=swagger&logoColor=000)](#документація-swagger)
 [![Deployment](https://img.shields.io/badge/Deployment-Render_Free-000000?logo=render&logoColor=white)](https://e-pharmacy-api-kz62.onrender.com)
 
-[Repository](https://github.com/AvalianY/admin_dashboard_back) · [Live API](https://e-pharmacy-api-kz62.onrender.com) · [Swagger UI](https://e-pharmacy-api-kz62.onrender.com/api-docs)
+[Repository](https://github.com/AvalianY/admin_dashboard_back) · [Live API](https://e-pharmacy-api-kz62.onrender.com) · [Swagger UI](https://e-pharmacy-api-kz62.onrender.com/api-docs/)
 
-**Swagger: публікація очікується**
+**Swagger UI: працює онлайн**
 
 </div>
 
@@ -234,7 +234,7 @@ Production містить 60 товарів, 5 постачальників, 88 
 
 Токени не зберігаються після перезавантаження сторінки чи між сесіями браузера. Операції запису змінюють обрану базу, тому для production потрібне окремо погоджене тестове вікно з backup і відновленням. Для браузерних запитів точний origin API має бути дозволений у CORS_ORIGINS; усі захищені операції й надалі потребують JWT.
 
-Майбутня публічна UI: [https://e-pharmacy-api-kz62.onrender.com/api-docs](https://e-pharmacy-api-kz62.onrender.com/api-docs). **Ще не опублікована:** push і Render deployment потребують окремого дозволу. До публікації ця адреса може повертати 404.
+Публічна Swagger UI: [https://e-pharmacy-api-kz62.onrender.com/api-docs/](https://e-pharmacy-api-kz62.onrender.com/api-docs/). Інтерактивна документація розгорнута на Render і містить усі 15 API-операцій із наявною Bearer-схемою.
 
 ## Розгортання
 
@@ -242,7 +242,7 @@ Production містить 60 товарів, 5 постачальників, 88 
 
 `render.yaml` задає Node 26.13.0, `npm ci --include=dev && npm run build`, `npm start` та вимкнені автоматичні deployment. Після підключення до БД сервер слухає `0.0.0.0` і наданий PORT. Секрети налаштовуються в приватних environment settings; ініціалізація та імпорт не виконуються в build/start hooks.
 
-Render Free зупиняє неактивні сервіси; наступний запит може спричинити cold start. Дані та сесії зберігаються в Atlas, локальна файлова система сервісу тимчасова. [Безкоштовні ліміти](https://render.com/docs/free). `render.yaml` дозволяє лише `https://e-pharmacy-api-kz62.onrender.com` як production-origin для Swagger. Під час майбутнього погодженого deployment перевірте це саме значення у фактичних Render Environment Settings: локальна зміна YAML не оновлює наявний сервіс автоматично. Frontend-origin буде додано лише після його погодження.
+Render Free зупиняє неактивні сервіси; наступний запит може спричинити cold start. Дані та сесії зберігаються в Atlas, локальна файлова система сервісу тимчасова. [Безкоштовні ліміти](https://render.com/docs/free). `render.yaml` дозволяє лише `https://e-pharmacy-api-kz62.onrender.com` як production-origin для Swagger. Фактичні Render Environment Settings мають відповідати цій конфігурації: локальна зміна YAML не оновлює наявний сервіс автоматично. Frontend-origin буде додано лише після його погодження.
 
 Порядок дій, безпечне адміністрування та межі дозволів: [інструкція розгортання](docs/free-deployment.md). Нові кроки публікації погоджуються окремо.
 
@@ -252,7 +252,7 @@ Render Free зупиняє неактивні сервіси; наступний
 
 Набір перевіряє автентифікацію, сесії, каталоги, Dashboard, імпорт, контракти запитів/відповідей, помилки та фактичний скомпільований сервер. Перевірки Swagger охоплюють HTML, локальні ресурси, всі 15 операцій, приклади, Bearer-схему, налаштування збереження токенів і незмінні межі CORS/JWT.
 
-**Live-підтвердження від 13.11.2026:** усі 15 бізнес-операцій, 74 HTTPS-запити та точне відновлення 190 оригінальних документів після тимчасових тестових змін — PASS. Раніше також перевірено 49 безпечних HTTPS-сценаріїв, зокрема cold start. Нова Swagger UI перевірена локально; production-перевірка можлива лише після її окремого deployment.
+**Live-підтвердження від 13.11.2026:** усі 15 бізнес-операцій, 74 HTTPS-запити та точне відновлення 190 оригінальних документів після тимчасових тестових змін — PASS. Раніше також перевірено 49 безпечних HTTPS-сценаріїв, зокрема cold start. Публічну Swagger UI та її OpenAPI JSON перевірено після розгортання: обидва ресурси повертають HTTP 200; специфікація містить усі 15 операцій і наявну Bearer-схему.
 
 Підсумкова локальна перевірка: TypeScript, ESLint і production build — успішно; пройдено **149 публічних тестів** та **5 окремих тестів оригінальних даних**. `npm audit` повідомляє про **0 відомих вразливостей**. Браузерний тест скомпільованого сервера підтверджує всі 15 операцій Swagger, передавання Bearer, Try it out та очищення авторизації після перезавантаження сторінки.
 
