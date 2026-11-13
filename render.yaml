@@ -17,4 +17,4 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: CORS_ORIGINS
-        value: ""
+        value: https://e-pharmacy-api-kz62.onrender.com

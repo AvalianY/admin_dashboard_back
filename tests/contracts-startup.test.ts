@@ -233,7 +233,7 @@ describe("integration acceptance", () => {
           PORT: String(port),
           MONGODB_URI: config.mongodbUri,
           JWT_SECRET: config.jwtSecret,
-          CORS_ORIGINS: "",
+          CORS_ORIGINS: `http://127.0.0.1:${port}`,
         },
         stdio: ["ignore", "pipe", "pipe"],
       },
@@ -277,6 +277,33 @@ describe("integration acceptance", () => {
         family: "IPv4",
         port,
       });
+      const documentation = await fetch(`http://127.0.0.1:${port}/api-docs`);
+      expect(documentation.status).toBe(200);
+      expect(await documentation.text()).toContain("E-Pharmacy API Documentation");
+      const publishedSpec = await fetch(`http://127.0.0.1:${port}/api-docs/openapi.json`);
+      expect(publishedSpec.status).toBe(200);
+      expect(await publishedSpec.json()).toEqual(openapi);
+      const initializer = await fetch(`http://127.0.0.1:${port}/api-docs/swagger-ui-init.js`);
+      expect(initializer.status).toBe(200);
+      expect(await initializer.text()).toContain('"persistAuthorization": false');
+      const bundle = await fetch(`http://127.0.0.1:${port}/api-docs/swagger-ui-bundle.js`);
+      expect(bundle.status).toBe(200);
+      expect(bundle.headers.get("content-type")).toMatch(/javascript/);
+      const origin = `http://127.0.0.1:${port}`;
+      const sameOriginPost = await fetch(`${origin}/api/user/login`, {
+        method: "POST",
+        headers: { Origin: origin, "Content-Type": "application/json" },
+        body: "{}",
+      });
+      expect(sameOriginPost.status).toBe(400);
+      expect((await sameOriginPost.json()).error.code).toBe("VALIDATION_ERROR");
+      expect(sameOriginPost.headers.get("access-control-allow-origin")).toBe(origin);
+      const preflight = await fetch(`${origin}/api/user/login`, {
+        method: "OPTIONS",
+        headers: { Origin: origin, "Access-Control-Request-Method": "POST", "Access-Control-Request-Headers": "authorization,content-type" },
+      });
+      expect(preflight.status).toBe(204);
+      expect(preflight.headers.get("access-control-allow-origin")).toBe(origin);
     } finally {
       child.kill();
       await exited;

@@ -1,14 +1,19 @@
 # Free deployment runbook
 
-Status: preparation only. Provider documentation checked on 2026-11-09.
-No cloud resources, production database changes, Git publication or deployments
-are authorized by this document. Obtain the approvals listed below before
-executing the corresponding steps.
+Status: the existing Atlas database was initialized and verified on 2026-11-13
+under the owner's explicit authorization. Provider documentation was checked on
+2026-11-09. Render creation,
+deployment, Git staging, further commits and push require separate permission.
+This runbook records the procedure; actual execution results must be verified
+separately and must not be inferred from these instructions.
 
-Data publication policy: private original JSON and the source archive are excluded
-from Git and must remain local. Permission to transfer those originals to Atlas
-has not been confirmed. All cloud-demo instructions below use only the separate,
-fictional `data/demo/` dataset, its own manifest and `demo-v1` provenance.
+Data publication policy: the owner confirmed that the original JSON are the
+educational source for the public demonstration database `e_pharmacy`. Import
+them directly from the local ignored `data/source/` using `npm run seed`, the
+approved original manifest and `v1:<content hash>` provenance. Original JSON and
+the source archive remain excluded from Git and must not be uploaded to GitHub
+or Render. The fictional `data/demo/` / `demo-v1` dataset is for development and
+isolated tests only; never run `seed:demo` against the public `e_pharmacy` database.
 
 ## 1. Target and availability
 
@@ -78,7 +83,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: CORS_ORIGINS
-        value: ""
+        value: https://e-pharmacy-api-kz62.onrender.com
 ```
 
 The lockfile controls installation; TypeScript remains available during build.
@@ -102,9 +107,9 @@ the authenticated API/database smoke tests.
 Blueprint creation can initiate the first deployment even with future automatic
 deployments disabled. Creation therefore needs approval for that initial attempt.
 The generated JWT secret is assigned if absent, not regenerated on each start.
-Keep its value stable. When adding a frontend later, update the authorized
-origin in Render and reconcile `render.yaml` so a later Blueprint sync does not
-restore the initial empty value.
+Keep its value stable. The Blueprint allows only the approved backend origin
+for Swagger. Add the real frontend origin only when it is known and approved,
+preserving the backend origin in both Render and `render.yaml`.
 [Blueprint reference](https://render.com/docs/blueprint-spec).
 
 ## 4. Environment inventory
@@ -116,7 +121,7 @@ restore the initial empty value.
 | NODE_ENV | Application mode | No | Explicit `production` on Render; application default `development`. |
 | PORT | HTTP listening port | No | Use Render's assigned value; do not hardcode a dashboard override. Local default 3000; Render normally supplies 10000. |
 | NODE_VERSION | Render runtime selection, not read by application config | No | 26.13.0 in Blueprint and `.node-version`. |
-| CORS_ORIGINS | Comma-separated exact authorized origins | No | Empty on initial Render deployment; application default empty. Development template allows localhost:5173. |
+| CORS_ORIGINS | Comma-separated exact authorized origins | No | Blueprint: https://e-pharmacy-api-kz62.onrender.com only. Verify the existing Render service separately during the approved deployment. Development template allows localhost:3000 and localhost:5173; these are not production origins. |
 | INITIAL_USER_NAME | Required only by `user:init` | Private profile value | Local administrative process only; no default. |
 | INITIAL_USER_EMAIL | Required only by `user:init` | Private profile value | Local administrative process only; no default. |
 | INITIAL_USER_PASSWORD | Required only by `user:init` | Yes | Hidden local prompt; no default. Never configure it on Render. |
@@ -124,6 +129,17 @@ restore the initial empty value.
 
 `MONGOMS_DOWNLOAD_DIR` is an optional local test-cache setting, not a production
 requirement. No additional application environment variables are needed.
+
+Swagger browser POST requests send Origin even when the UI and API share an
+origin. The existing whitelist must therefore include the exact backend origin.
+`render.yaml` now contains the approved value
+`CORS_ORIGINS=https://e-pharmacy-api-kz62.onrender.com`. This local file change
+does not guarantee that the existing Render Web Service Environment is updated.
+During the separately approved publication/deployment, verify that exact value
+in Render. Do not change Render Environment or trigger deployment as part of
+local preparation. The development template includes http://localhost:3000;
+no localhost, wildcard or unknown frontend origin is allowed in production.
+JWT remains required.
 
 An empty CORS list permits requests without an Origin header, such as native
 CLI clients, and rejects browser origins. It does not make the API public to
@@ -167,6 +183,16 @@ Do not create another repository or change visibility. Record the approved
 commit hash before connecting Render.
 
 ## 6. Atlas account, cluster and database user
+
+The owner has already created **Cluster0**, **Free**, **AWS Frankfurt/eu-central-1**,
+the database user and the current workstation IP rule. Use this existing cluster;
+do not recreate it, change its tier, add payment methods or enable paid options.
+The current user has broad permissions and may be used for this initialization;
+do not expand its privileges. For the future Render connection, use a separate
+user scoped to `readWrite` on `e_pharmacy` only when that setup is authorized.
+
+The following checklist describes provisioning requirements for reference, not
+authorization to create more resources:
 
 After explicit cloud-creation approval:
 
@@ -241,17 +267,22 @@ outbound CIDRs are allowed. After approved creation, obtain the ranges, update
 Atlas, and retry manually. Accept a temporary failed start instead of opening
 `0.0.0.0/0`. Do not retry continuously while the access list is incomplete.
 
-## 8. Initial administrator and synthetic demo import from the local project
+## 8. Initial administrator and original v1 import from the local project
 
-This procedure is for **future execution only**, after explicit approval for
-production database writes. Render Free shell/one-off jobs are unavailable;
-do not add startup hooks as a workaround. Run from this backend repository with
-the approved Node runtime and installed dependencies.
+The owner authorized initial account creation, original-data import and repeated
+import verification in the existing `e_pharmacy` database on 2026-11-13. This does
+not authorize resets, deletions, account overwrites, Render creation or deployment.
+Render Free shell/one-off jobs are unavailable; do not add startup hooks. Run
+locally from this backend repository with Node 26.13.0 and installed dependencies.
 
-This procedure imports only the public synthetic dataset into the approved demo
-database named `e_pharmacy`. Do not replace `seed:demo` with private `seed`, upload
-original files or set a private data directory on Render. Original-data transfer
-needs separate confirmed permission and is outside this procedure.
+Verify all eight local originals against `data/source-manifest.json` before any
+database write. The importer uses five of those files, checks SHA-256 and imports
+exactly 60 products, 5 suppliers, 88 customers, 25 orders and 12 financial
+transactions. It preserves separate source rows, legacy IDs/categories, exact
+money and unknown historical fields. BDT remains BDT in legacy metadata, with
+unknown EUR amount; no exchange rate is invented. Do not modify source JSON or
+the manifest, mix source versions, upload originals to Render, or use `seed:demo`
+in this public database.
 
 The following PowerShell session uses hidden prompts and restores the prior
 process environment. It does not write an environment file. The temporary CLI
@@ -261,7 +292,7 @@ It is separate from the stable, Render-generated application signing secret.
 ```powershell
 $deploymentNames = @(
   'NODE_ENV', 'MONGODB_URI', 'JWT_SECRET', 'CORS_ORIGINS',
-  'INITIAL_USER_NAME', 'INITIAL_USER_EMAIL', 'INITIAL_USER_PASSWORD'
+  'INITIAL_USER_NAME', 'INITIAL_USER_EMAIL', 'INITIAL_USER_PASSWORD', 'SOURCE_DATA_DIR'
 )
 $deploymentPrevious = @{}
 foreach ($deploymentName in $deploymentNames) {
@@ -270,6 +301,7 @@ foreach ($deploymentName in $deploymentNames) {
 try {
   $env:NODE_ENV = 'production'
   $env:CORS_ORIGINS = ''
+  $env:SOURCE_DATA_DIR = (Resolve-Path -LiteralPath 'data/source').Path
   $deploymentUri = Read-Host 'Atlas URI for e_pharmacy (hidden)' -AsSecureString
   $env:MONGODB_URI = [System.Net.NetworkCredential]::new('', $deploymentUri).Password
   $env:JWT_SECRET = & node --input-type=module -e "import { randomBytes } from 'node:crypto'; process.stdout.write(randomBytes(32).toString('base64url'))"
@@ -284,6 +316,11 @@ try {
   });
   if (mongoose.connection.name !== 'e_pharmacy') throw new Error('Unexpected database');
   await mongoose.connection.db.command({ ping: 1 });
+  for (const entry of await mongoose.connection.db.listCollections({}, { nameOnly: true }).toArray()) {
+    if (await mongoose.connection.db.collection(entry.name).countDocuments({})) {
+      throw new Error('Existing content requires review before initialization');
+    }
+  }
   console.info('Connected to the expected e_pharmacy database.');
 } catch {
   console.error('Connectivity or database identity check failed.');
@@ -303,12 +340,12 @@ try {
   if ($LASTEXITCODE -ne 0) { throw 'Stop: inspect initialization without resetting accounts' }
   [Environment]::SetEnvironmentVariable('INITIAL_USER_PASSWORD', $null, 'Process')
 
-  # WRITE: inserts the separate synthetic demo-v1 dataset, with hashes and provenance.
-  npm run seed:demo
+  # WRITE: inserts the approved original v1 dataset, with hashes and provenance.
+  npm run seed
   if ($LASTEXITCODE -ne 0) { throw 'Stop: investigate import without dropping data' }
 
   # WRITE-CAPABLE verification: same source; must insert zero additional rows.
-  npm run seed:demo
+  npm run seed
   if ($LASTEXITCODE -ne 0) { throw 'Repeated import verification failed' }
 
   # READ ONLY: verify source and total domain counts before mutation smoke tests.
@@ -343,15 +380,56 @@ try {
 }
 ```
 
-Before running, verify this is the intended fresh database; stop on unexpected
-existing content. Inspect `demo-v1` provenance and all five synthetic import
-results: 60/5/88/25/12, total **190**,
-then `inserted: 0` on repeat. The administrator and session documents are separate
-from that domain total. Source hashes, duplicate preservation, stable IDs and
-unknown historical fields remain governed by the public synthetic import tests.
-The separate local private-source suite is not run against Atlas.
-Remove temporary network access and close the administrative terminal afterwards.
-Never point the ordinary test suite at Atlas or run a database reset there.
+Before running, verify the explicit Atlas host and `/e_pharmacy` URI path, TLS,
+the current IP rule and read-only database identity/content checks. Stop on
+unexpected content, an existing administrator or any incompatible source version;
+do not delete, reset, overwrite or retry initialization blindly. A compatible
+existing import also needs review before continuing this initial-setup procedure.
+The owner supplies or explicitly approves the real administrator name/email.
+The manual procedure uses a hidden local application-password prompt. When the
+owner explicitly authorizes automation instead, use the approved local Git
+profile, generate a cryptographically random application password and store it
+as a new current-user, local-computer Windows Credential Manager generic entry.
+Verify storage before account creation, and never overwrite an existing entry.
+Never reuse the MongoDB password, print the application password in chat/terminal,
+or save it in project files. The disposable CLI JWT value is not that password.
+
+Inspect original `v1:<content hash>` provenance and all five import results:
+60/5/88/25/12, total **190**, then `inserted: 0` for every batch on repeat.
+The administrator and session documents are separate from that domain total.
+Read-only verification must also confirm zero `demo-v1` records, unique
+provenance keys and their unique sparse indexes, all 190 original business-field
+values, preserved duplicate rows and unknown dates/links, unchanged source hashes
+and unchanged stored records after repeat import. Reconnect independently and
+check the administrator/password hash without printing credentials or full rows.
+Report only counts and integrity outcomes. A count check alone is insufficient.
+Do not run the private-source suite or any clearing/reset tests against Atlas.
+Close the administrative terminal and clear its temporary environment afterwards.
+Any later network-rule cleanup requires authorization; do not broaden access.
+
+### Verified initialization record — 2026-11-13
+
+The existing `e_pharmacy` database passed an independent read-only Mongoose
+preflight with Node 26.13.0 and no existing collections. All eight original
+SHA-256 values matched the unchanged manifest. The owner then approved the real
+local Git profile and automatic password generation instead of manual input.
+One application administrator was created through the existing `user:init`
+command, with its generated password stored and read back successfully in the
+current user's Windows Credential Manager entry
+`E-Pharmacy/e_pharmacy/administrator`. No administrator password was written to
+project files or printed; the database connection URI remains in ignored `.env`.
+
+The existing `seed` command imported 60 products, 5 suppliers, 88 customers,
+25 orders and 12 financial transactions: 190 domain records. A second `seed`
+reported `inserted: 0` in every batch. Read-only verification in separate
+connections confirmed all 190 original business-field values, distinct ObjectIds,
+unique provenance keys/indexes, zero `demo-v1` records, the administrator password
+hash, and an unchanged fingerprint of every stored domain record after repeat.
+There is one user and zero session documents, separate from the 190 domain rows.
+The verified source version is
+`v1:62a3158724ce94ab767ab9c4abfa24cc9741fb194baa6d5567e4518a36479569`.
+No collection resets/deletions, Render resources or deployments were performed.
+These documentation changes remain local pending separate Git approval.
 
 ## 9. Deployment sequence and approval boundaries
 
@@ -359,11 +437,11 @@ Never point the ordinary test suite at Atlas or run a database reset there.
 | --- | --- | --- |
 | A: local preflight | Install, typecheck, lint, tests, OpenAPI, production build, compiled startup; record actual outcomes | Already allowed for local isolated checks |
 | B: Git | Review exact files; make the approved first commit; publish that hash to the existing GitHub remote | Separate commit and push approvals; commit permission does not authorize push |
-| C: Atlas Free | Account/project, zero-cost gate, Free AWS Frankfurt, scoped user, temporary workstation IP, read-only ping | Cloud creation/configuration approval |
-| D: database setup | Local user:init, seed:demo, repeated seed:demo, counts, synthetic source version and hashes | Explicit production-write approval; original data transfer is not authorized |
+| C: Atlas Free | Use the owner-created Cluster0, Free AWS Frankfurt and existing user/IP rule; verify read-only identity and content | Existing-cluster connection authorized on 2026-11-13; new resources or access changes need separate approval |
+| D: database setup | Local user:init, seed, repeated seed, 190 original rows, v1 provenance, hashes and read-only integrity/reconnection checks | Original educational data and initial account writes authorized on 2026-11-13; no demo-v1 in e_pharmacy |
 | E: Render Free | Connect approved repository/branch, inspect Free/Frankfurt summary, set environment, keep auto-deploys off; create one service | Render creation AND initial-deployment approval, because creation can deploy immediately |
 | F: network | Obtain actual Connect > Outbound CIDRs, add Atlas rules, retry failed initial start manually | Approval for Atlas access-list changes and manual deployment/restart |
-| G: public API | HTTPS, authentication, all 15 operations, persistence/restart, errors; isolate mutation tests as below | Explicit acceptance-test writes, environment switching and restart approval |
+| G: public API | HTTPS, authentication, all 15 operations, verified backup and exact restoration; see the completed acceptance record below | Explicit production test/restore authorization; any future restart or environment switch needs its own approval |
 | H: acceptance | Record URL, deployed commit, active database name, tests, quota settings and zero paid resources | Owner accepts the evidence; only then may frontend development begin |
 
 For a Dashboard-based service creation, enter the YAML-equivalent settings
@@ -379,36 +457,47 @@ automatic previews, add payment information or change repository visibility.
 ## 10. Public HTTPS smoke plan
 
 Record only the real assigned HTTPS URL and deployed commit after deployment.
-Do not guess either. Use a native client without an Origin header while CORS is
-empty. Keep credentials and tokens in memory, not shell literals or reports.
+Do not guess either. Native clients do not need an Origin header. Keep
+credentials and tokens in memory, not shell literals or reports.
 
 Begin with read-only baselines: 60 active products, 5 suppliers, 88 customers,
 25 orders and the documented partial historical results. Login/logout create
 or revoke session documents and must be included in the test-write approval.
 
-### Isolate mutation tests
+### Approved production acceptance and exact restoration
 
-Products use logical deletion; suppliers have no delete API; clients have no
-create/delete API. Use only the approved synthetic demonstration records for
-cloud tests, retaining an isolated acceptance database for mutation checks.
+The owner authorized the remaining six business mutations on the existing
+`e_pharmacy` database for the final acceptance window on 2026-11-13. No separate
+acceptance database or additional cloud service was created. This is an execution
+record, not standing permission to repeat production writes.
 
-With explicit approval, prepare **e_pharmacy_acceptance**, a temporary database
-in the same Free cluster, using a separately scoped temporary database user.
-Use `seed:demo` for the same synthetic source and create a test administrator there. Repeat
-the identity check above with that explicitly approved database name. Temporarily
-point the same Render service to that database and run the mutation matrix.
-This uses no second cluster or web service, but consumes the shared Free storage
-and manual-deployment quotas. Keep the signing secret stable.
+Before any mutation, native MongoDB Database Tools 100.20.1 mongodump backed up
+only the five domain collections outside the repository with current-user-only
+filesystem access. Raw BSON and index metadata matched the production baseline.
+The native isolated mongorestore attempt did not complete successfully; an
+independent BSON-driver round trip into a local ephemeral MongoDB replica set
+then verified all 190 documents, exact IDs/types/fields and indexes. The same
+narrow transaction-based restoration was rehearsed locally before production writes.
 
-Then restore the URI for **e_pharmacy**, redeploy/restart as approved, and repeat
-HTTPS, login/profile, all read operations, expected demo counts and logout against
-the final production configuration. Tokens belong to their database's sessions;
-do not expect a test-database token to authorize against production.
+The owner confirmed that no other writers would operate during the window. The
+runner checked for other active sessions, journaled only its known test IDs and
+verified that unrelated records/indexes remained unchanged. All 15 operations
+passed 74 real HTTPS requests, including a live supplier 409 conflict.
 
-Record test IDs privately. Leave the isolated test data until targeted cleanup
-is authorized. Never delete production collections, reset production data or
-automatically purge imported records. If isolation is declined, obtain explicit
-approval for each affected source record and cleanup operation before mutating it.
+Restoration atomically replaced four affected original documents from verified
+BSON and removed only two specifically identified, newly created test records.
+It did not drop collections or reset the database, and did not write users or
+sessions directly. All five domain collections matched their baseline byte for
+byte, including original ObjectIds, Decimal128, dates, provenance and indexes.
+Counts returned to 60/5/88/25/12; Dashboard returned to 60/5/88. The test login
+session was revoked through the existing API. The backup remains local; private
+records and operational reports are not part of the Git publication.
+
+For future mutation checks, obtain a new explicit test/restore authorization,
+a verified restorable backup and an exclusive write window. Use scoped exact-ID
+restoration with conflict detection; never treat seed as restoration or perform
+unconditional database/collection deletion. Stop on restoration failure without
+blind destructive retries.
 
 | Operation | Checks |
 | --- | --- |
@@ -418,15 +507,15 @@ approval for each affected source record and cleanup operation before mutating i
 | GET /api/dashboard | Baseline totals 60/5/88 from database; last30Days separate; exact current UTC date plus previous 29 dates; five recent registrations; Today/completeness rules |
 | GET /api/orders | 25 source orders, literal `name` filtering, documented `sortBy`/`sortOrder`; original productUnits, unknown items and metadata preserved |
 | GET /api/products | 60 active source rows, nine creation categories, literal name filter, allowed sort fields and default order; no implicit pagination |
-| POST /api/products | Isolated named test product with approved category and exact decimal EUR string => 201; Heart/Leg/invalid category rejected; Dashboard count increases |
+| POST /api/products | An explicitly authorized named test product with approved category and exact decimal EUR string => 201; Heart/Leg/invalid category rejected; Dashboard count increases |
 | PUT /api/products/:productId | Full editable fields; timestamps/provenance preserved; retain current legacy category or move to approved category; reject legacy switching/return; invalid IDs/body rejected |
 | DELETE /api/products/:productId | Delete only the authorized test product => 204; active list and counter decrease; stored record remains logically deleted |
-| GET /api/suppliers | Five synthetic suppliers, literal name search, correct statuses, unknown EUR and preserved fictional BDT examples with partial metadata |
-| POST /api/suppliers | Isolated test supplier => 201; non-negative decimal EUR; invalid date/status or null amount rejected; remember there is no delete API |
-| PUT /api/suppliers/:supplierId | In isolated legacy copy change status/address/company while retaining amount:null and BDT; explicit EUR accepted; known-to-null rejected; all fields required; conflict response documented as 409 |
+| GET /api/suppliers | Five original suppliers, literal name search, correct statuses, unknown EUR and preserved source BDT amounts with partial metadata |
+| POST /api/suppliers | An explicitly authorized test supplier => 201; non-negative decimal EUR; invalid date/status or null amount rejected; remember there is no delete API |
+| PUT /api/suppliers/:supplierId | In an authorized legacy test record change status/address/company while retaining amount:null and BDT; explicit EUR accepted; known-to-null rejected; all fields required; conflict response documented as 409 |
 | GET /api/customers | 88 separate customers, name search, default page 1/limit 20, maximum 100, final/empty pages and pagination metadata |
 | GET /api/customers/:customerId | Profile and combined-history representation; missing verified links => history:null/partial, never invented relationships or verified empty history |
-| PATCH /api/customers/:customerId | In isolated customer copy modify permitted profile fields; Dashboard reflects changes; spent/technical fields rejected and unsupplied fields preserved |
+| PATCH /api/customers/:customerId | In an authorized customer test record modify permitted profile fields; Dashboard reflects changes; spent/technical fields rejected and unsupplied fields preserved |
 
 Also check malformed JSON => 400, oversized JSON => 413, unsupported charset or
 encoding => 415, unknown fields => 400, disallowed Origin => 403, absent resource
@@ -496,7 +585,8 @@ services as a workaround.
 
 After the separately authorized deployment, record the real URL, deployed commit,
 Node version, region/plan, database name (without URI), zero-cost checks, all
-smoke outcomes, restart/expiry outcomes, the synthetic demo-v1 source version
-and remaining provider limitations. Do not describe the cloud dataset as original records.
+smoke outcomes, restart/expiry outcomes, the original v1 source version and
+remaining provider limitations. Keep original JSON excluded from Git; synthetic
+demo-v1 belongs only to separately authorized development/acceptance databases.
 Do not mark deployment complete or begin frontend development before that record
 is accepted. Local preparation does not substitute for public HTTPS verification.

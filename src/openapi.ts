@@ -336,11 +336,20 @@ const pathId = (name: string) => [
 
 export const openapi = {
   openapi: "3.1.0",
+  servers: [{ url: "/", description: "Current API server" }],
+  tags: [
+    { name: "Authentication", description: "Login, profile and current-session revocation" },
+    { name: "Dashboard", description: "Current counters and explicit historical completeness" },
+    { name: "Products", description: "Catalog, approved categories and logical deletion" },
+    { name: "Suppliers", description: "Supplier records, EUR and preserved legacy BDT" },
+    { name: "Customers", description: "Profiles and verified customer history" },
+    { name: "Orders", description: "Read-only historical order snapshots" },
+  ],
   info: {
     title: "E-Pharmacy API",
     version: "1.0.0",
     description:
-      "Authenticated administration API. Overall counters and 30-day statistics are separate. Unknown historical values use null with completeness metadata. New monetary values use EUR; legacy BDT is preserved without conversion. Unknown request body/query fields are rejected. JSON bodies have a 100 KB limit after decompression; invalid bodies return 400, oversized bodies 413, and unsupported charset/content encoding 415. The custom decimal128 format requires an exact BSON Decimal128 value; validators must enable that format in addition to the lexical pattern.",
+      "Authenticated administration API. Overall counters and 30-day statistics are separate. Unknown historical values use null with completeness metadata. New monetary values use EUR; legacy BDT is preserved without conversion. Unknown request body/query fields are rejected. JSON bodies have a 100 KB limit after decompression; invalid bodies return 400, oversized bodies 413, and unsupported charset/content encoding 415. The custom decimal128 format requires an exact BSON Decimal128 value; validators must enable that format in addition to the lexical pattern. Documentation examples are synthetic. Mutations affect the selected server and require an explicitly authorized test window.",
   },
   paths: {
     "/api/user/login": {
@@ -498,3 +507,61 @@ Object.assign(openapi.paths["/api/suppliers/{supplierId}"].put.responses, {
     content: { "application/json": { schema: ref("Error") } },
   },
 });
+
+// Illustrative fixtures only. No production records, credentials or real JWTs.
+const exampleUser = { id: "000000000000000000000001", name: "Example administrator", email: "admin@example.test" };
+const exampleProductInput = { name: "Example product", category: "Medicine", stock: 7, suppliers: "Example supplier", price: "12.34" };
+const exampleProduct = { id: "000000000000000000000002", legacyId: null, photo: null, ...exampleProductInput, currency: "EUR", createdAt: null, updatedAt: null };
+const exampleSupplierInput = { name: "Example supplier", address: "Example address", company: "Example company", deliveryDate: "2030-01-01", amount: "10.50", status: "Active" };
+const exampleSupplier = { id: "000000000000000000000003", ...exampleSupplierInput, currency: "EUR", legacyMoney: null, createdAt: null, updatedAt: null };
+const exampleCustomer = { id: "000000000000000000000004", name: "Example customer", email: "customer@example.test", address: "Example address", phone: "TEST-PHONE", country: null, photo: null, registerDate: "2030-01-01", spent: "0.00", currency: "EUR", createdAt: null, updatedAt: null };
+const exampleOrder = { id: "000000000000000000000005", name: "Example customer", photo: null, address: "Example address", productUnits: 1, price: "12.34", currency: "EUR", status: orderStatuses[0], orderDate: null, customerId: null, items: null, createdAt: null, updatedAt: null };
+const requestExamples: Record<string, unknown> = {
+  Login: { email: "admin@example.test", password: "enter-your-own-password" },
+  ProductCreate: exampleProductInput,
+  ProductUpdate: exampleProductInput,
+  SupplierCreate: exampleSupplierInput,
+  SupplierUpdate: exampleSupplierInput,
+  CustomerPatch: { name: "Updated example customer", country: "Example country" },
+};
+const successExamples: Record<string, unknown> = {
+  "POST /api/user/login": { accessToken: "<access-token-returned-by-login>", tokenType: "Bearer", expiresAt: "2030-01-01T01:00:00.000Z", user: exampleUser },
+  "GET /api/user/user-info": exampleUser,
+  "GET /api/products": { items: [exampleProduct], categories: [...categories] },
+  "POST /api/products": { ...exampleProduct, createdAt: "2030-01-01T00:00:00.000Z", updatedAt: "2030-01-01T00:00:00.000Z" },
+  "PUT /api/products/{productId}": { ...exampleProduct, updatedAt: "2030-01-01T00:00:00.000Z" },
+  "GET /api/suppliers": { items: [exampleSupplier] },
+  "POST /api/suppliers": { ...exampleSupplier, createdAt: "2030-01-01T00:00:00.000Z", updatedAt: "2030-01-01T00:00:00.000Z" },
+  "PUT /api/suppliers/{supplierId}": { ...exampleSupplier, updatedAt: "2030-01-01T00:00:00.000Z" },
+  "GET /api/customers": { items: [exampleCustomer] },
+  "GET /api/customers/{customerId}": { customer: exampleCustomer, history: null },
+  "PATCH /api/customers/{customerId}": exampleCustomer,
+  "GET /api/orders": { items: [exampleOrder] },
+  "GET /api/dashboard": { user: exampleUser, totals: { products: 60, suppliers: 5, customers: 88 }, last30Days: { products: null, suppliers: null, customers: 0 }, recentCustomers: [exampleCustomer], incomeExpensesToday: null },
+};
+const moduleTags: Record<string, string> = { user: "Authentication", dashboard: "Dashboard", products: "Products", suppliers: "Suppliers", customers: "Customers", orders: "Orders" };
+const exampleErrorCodes: Record<string, string> = { "400": "VALIDATION_ERROR", "401": "UNAUTHORIZED", "403": "ORIGIN_NOT_ALLOWED", "404": "NOT_FOUND", "409": "CONCURRENT_CHANGE", "413": "PAYLOAD_TOO_LARGE", "415": "UNSUPPORTED_MEDIA_TYPE", "500": "INTERNAL_ERROR" };
+interface DocumentedOperation {
+  tags?: string[];
+  operationId?: string;
+  requestBody?: { content: Record<string, { schema: Schema; example?: unknown }> };
+  responses: Record<string, { content?: Record<string, { schema: Schema; example?: unknown }> }>;
+}
+for (const [path, methods] of Object.entries(openapi.paths)) {
+  for (const [method, value] of Object.entries(methods)) {
+    const documented = value as unknown as DocumentedOperation;
+    documented.tags = [moduleTags[path.split("/")[2]]];
+    documented.operationId = `${method}_${path.replace(/[^a-zA-Z0-9]+/g, "_").replace(/^_|_$/g, "")}`;
+    const request = documented.requestBody?.content["application/json"];
+    if (request && typeof request.schema.$ref === "string") request.example = requestExamples[request.schema.$ref.split("/").at(-1)!];
+    for (const [status, response] of Object.entries(documented.responses)) {
+      const json = response.content?.["application/json"];
+      if (!json) continue;
+      if (Number(status) >= 400) {
+        json.example = { error: { code: exampleErrorCodes[status], message: "Illustrative error response" } };
+      } else {
+        json.example = { data: successExamples[`${method.toUpperCase()} ${path}`] };
+      }
+    }
+  }
+}

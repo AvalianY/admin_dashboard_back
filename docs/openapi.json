@@ -1,9 +1,41 @@
 {
   "openapi": "3.1.0",
+  "servers": [
+    {
+      "url": "/",
+      "description": "Current API server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "Login, profile and current-session revocation"
+    },
+    {
+      "name": "Dashboard",
+      "description": "Current counters and explicit historical completeness"
+    },
+    {
+      "name": "Products",
+      "description": "Catalog, approved categories and logical deletion"
+    },
+    {
+      "name": "Suppliers",
+      "description": "Supplier records, EUR and preserved legacy BDT"
+    },
+    {
+      "name": "Customers",
+      "description": "Profiles and verified customer history"
+    },
+    {
+      "name": "Orders",
+      "description": "Read-only historical order snapshots"
+    }
+  ],
   "info": {
     "title": "E-Pharmacy API",
     "version": "1.0.0",
-    "description": "Authenticated administration API. Overall counters and 30-day statistics are separate. Unknown historical values use null with completeness metadata. New monetary values use EUR; legacy BDT is preserved without conversion. Unknown request body/query fields are rejected. JSON bodies have a 100 KB limit after decompression; invalid bodies return 400, oversized bodies 413, and unsupported charset/content encoding 415. The custom decimal128 format requires an exact BSON Decimal128 value; validators must enable that format in addition to the lexical pattern."
+    "description": "Authenticated administration API. Overall counters and 30-day statistics are separate. Unknown historical values use null with completeness metadata. New monetary values use EUR; legacy BDT is preserved without conversion. Unknown request body/query fields are rejected. JSON bodies have a 100 KB limit after decompression; invalid bodies return 400, oversized bodies 413, and unsupported charset/content encoding 415. The custom decimal128 format requires an exact BSON Decimal128 value; validators must enable that format in addition to the lexical pattern. Documentation examples are synthetic. Mutations affect the selected server and require an explicitly authorized test window."
   },
   "paths": {
     "/api/user/login": {
@@ -16,6 +48,10 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Login"
+              },
+              "example": {
+                "email": "admin@example.test",
+                "password": "enter-your-own-password"
               }
             }
           }
@@ -39,6 +75,18 @@
                     "data"
                   ],
                   "additionalProperties": false
+                },
+                "example": {
+                  "data": {
+                    "accessToken": "<access-token-returned-by-login>",
+                    "tokenType": "Bearer",
+                    "expiresAt": "2030-01-01T01:00:00.000Z",
+                    "user": {
+                      "id": "000000000000000000000001",
+                      "name": "Example administrator",
+                      "email": "admin@example.test"
+                    }
+                  }
                 }
               }
             }
@@ -49,6 +97,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -59,6 +113,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             },
@@ -78,6 +138,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_NOT_ALLOWED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -88,6 +154,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -98,6 +170,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -108,6 +186,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -118,11 +202,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "post_api_user_login"
       }
     },
     "/api/user/logout": {
@@ -143,6 +237,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -153,6 +253,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             },
@@ -172,6 +278,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_NOT_ALLOWED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -182,6 +294,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -192,6 +310,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -202,6 +326,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -212,11 +342,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "get_api_user_logout"
       }
     },
     "/api/user/user-info": {
@@ -246,6 +386,13 @@
                     "data"
                   ],
                   "additionalProperties": false
+                },
+                "example": {
+                  "data": {
+                    "id": "000000000000000000000001",
+                    "name": "Example administrator",
+                    "email": "admin@example.test"
+                  }
                 }
               }
             }
@@ -256,6 +403,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -266,6 +419,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             },
@@ -285,6 +444,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_NOT_ALLOWED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -295,6 +460,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -305,6 +476,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -315,6 +492,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -325,11 +508,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "get_api_user_user_info"
       }
     },
     "/api/dashboard": {
@@ -359,6 +552,42 @@
                     "data"
                   ],
                   "additionalProperties": false
+                },
+                "example": {
+                  "data": {
+                    "user": {
+                      "id": "000000000000000000000001",
+                      "name": "Example administrator",
+                      "email": "admin@example.test"
+                    },
+                    "totals": {
+                      "products": 60,
+                      "suppliers": 5,
+                      "customers": 88
+                    },
+                    "last30Days": {
+                      "products": null,
+                      "suppliers": null,
+                      "customers": 0
+                    },
+                    "recentCustomers": [
+                      {
+                        "id": "000000000000000000000004",
+                        "name": "Example customer",
+                        "email": "customer@example.test",
+                        "address": "Example address",
+                        "phone": "TEST-PHONE",
+                        "country": null,
+                        "photo": null,
+                        "registerDate": "2030-01-01",
+                        "spent": "0.00",
+                        "currency": "EUR",
+                        "createdAt": null,
+                        "updatedAt": null
+                      }
+                    ],
+                    "incomeExpensesToday": null
+                  }
                 }
               }
             }
@@ -369,6 +598,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -379,6 +614,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             },
@@ -398,6 +639,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_NOT_ALLOWED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -408,6 +655,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -418,6 +671,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -428,6 +687,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -438,11 +703,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Dashboard"
+        ],
+        "operationId": "get_api_dashboard"
       }
     },
     "/api/products": {
@@ -543,6 +818,36 @@
                     "data"
                   ],
                   "additionalProperties": false
+                },
+                "example": {
+                  "data": {
+                    "items": [
+                      {
+                        "id": "000000000000000000000002",
+                        "legacyId": null,
+                        "photo": null,
+                        "name": "Example product",
+                        "category": "Medicine",
+                        "stock": 7,
+                        "suppliers": "Example supplier",
+                        "price": "12.34",
+                        "currency": "EUR",
+                        "createdAt": null,
+                        "updatedAt": null
+                      }
+                    ],
+                    "categories": [
+                      "Medicine",
+                      "Head",
+                      "Hand",
+                      "Dental Care",
+                      "Skin Care",
+                      "Eye Care",
+                      "Vitamins & Supplements",
+                      "Orthopedic Products",
+                      "Baby Care"
+                    ]
+                  }
                 }
               }
             }
@@ -553,6 +858,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -563,6 +874,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             },
@@ -582,6 +899,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_NOT_ALLOWED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -592,6 +915,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -602,6 +931,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -612,6 +947,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -622,11 +963,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Products"
+        ],
+        "operationId": "get_api_products"
       },
       "post": {
         "summary": "Create an EUR product in an approved category",
@@ -641,6 +992,13 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ProductCreate"
+              },
+              "example": {
+                "name": "Example product",
+                "category": "Medicine",
+                "stock": 7,
+                "suppliers": "Example supplier",
+                "price": "12.34"
               }
             }
           }
@@ -664,6 +1022,21 @@
                     "data"
                   ],
                   "additionalProperties": false
+                },
+                "example": {
+                  "data": {
+                    "id": "000000000000000000000002",
+                    "legacyId": null,
+                    "photo": null,
+                    "name": "Example product",
+                    "category": "Medicine",
+                    "stock": 7,
+                    "suppliers": "Example supplier",
+                    "price": "12.34",
+                    "currency": "EUR",
+                    "createdAt": "2030-01-01T00:00:00.000Z",
+                    "updatedAt": "2030-01-01T00:00:00.000Z"
+                  }
                 }
               }
             }
@@ -674,6 +1047,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -684,6 +1063,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             },
@@ -703,6 +1088,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_NOT_ALLOWED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -713,6 +1104,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -723,6 +1120,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -733,6 +1136,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -743,11 +1152,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Products"
+        ],
+        "operationId": "post_api_products"
       }
     },
     "/api/products/{productId}": {
@@ -775,6 +1194,13 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ProductUpdate"
+              },
+              "example": {
+                "name": "Example product",
+                "category": "Medicine",
+                "stock": 7,
+                "suppliers": "Example supplier",
+                "price": "12.34"
               }
             }
           }
@@ -798,6 +1224,21 @@
                     "data"
                   ],
                   "additionalProperties": false
+                },
+                "example": {
+                  "data": {
+                    "id": "000000000000000000000002",
+                    "legacyId": null,
+                    "photo": null,
+                    "name": "Example product",
+                    "category": "Medicine",
+                    "stock": 7,
+                    "suppliers": "Example supplier",
+                    "price": "12.34",
+                    "currency": "EUR",
+                    "createdAt": null,
+                    "updatedAt": "2030-01-01T00:00:00.000Z"
+                  }
                 }
               }
             }
@@ -808,6 +1249,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -818,6 +1265,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             },
@@ -837,6 +1290,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_NOT_ALLOWED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -847,6 +1306,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -857,6 +1322,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "CONCURRENT_CHANGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -867,6 +1338,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -877,6 +1354,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -887,11 +1370,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Products"
+        ],
+        "operationId": "put_api_products_productId"
       },
       "delete": {
         "summary": "Logically delete an active product",
@@ -921,6 +1414,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -931,6 +1430,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             },
@@ -950,6 +1455,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_NOT_ALLOWED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -960,6 +1471,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -970,6 +1487,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -980,6 +1503,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -990,11 +1519,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Products"
+        ],
+        "operationId": "delete_api_products_productId"
       }
     },
     "/api/suppliers": {
@@ -1047,6 +1586,25 @@
                     "data"
                   ],
                   "additionalProperties": false
+                },
+                "example": {
+                  "data": {
+                    "items": [
+                      {
+                        "id": "000000000000000000000003",
+                        "name": "Example supplier",
+                        "address": "Example address",
+                        "company": "Example company",
+                        "deliveryDate": "2030-01-01",
+                        "amount": "10.50",
+                        "status": "Active",
+                        "currency": "EUR",
+                        "legacyMoney": null,
+                        "createdAt": null,
+                        "updatedAt": null
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -1057,6 +1615,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1067,6 +1631,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             },
@@ -1086,6 +1656,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_NOT_ALLOWED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1096,6 +1672,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1106,6 +1688,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1116,6 +1704,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1126,11 +1720,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Suppliers"
+        ],
+        "operationId": "get_api_suppliers"
       },
       "post": {
         "summary": "Create an EUR supplier record",
@@ -1145,6 +1749,14 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SupplierCreate"
+              },
+              "example": {
+                "name": "Example supplier",
+                "address": "Example address",
+                "company": "Example company",
+                "deliveryDate": "2030-01-01",
+                "amount": "10.50",
+                "status": "Active"
               }
             }
           }
@@ -1168,6 +1780,21 @@
                     "data"
                   ],
                   "additionalProperties": false
+                },
+                "example": {
+                  "data": {
+                    "id": "000000000000000000000003",
+                    "name": "Example supplier",
+                    "address": "Example address",
+                    "company": "Example company",
+                    "deliveryDate": "2030-01-01",
+                    "amount": "10.50",
+                    "status": "Active",
+                    "currency": "EUR",
+                    "legacyMoney": null,
+                    "createdAt": "2030-01-01T00:00:00.000Z",
+                    "updatedAt": "2030-01-01T00:00:00.000Z"
+                  }
                 }
               }
             }
@@ -1178,6 +1805,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1188,6 +1821,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             },
@@ -1207,6 +1846,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_NOT_ALLOWED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1217,6 +1862,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1227,6 +1878,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1237,6 +1894,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1247,11 +1910,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Suppliers"
+        ],
+        "operationId": "post_api_suppliers"
       }
     },
     "/api/suppliers/{supplierId}": {
@@ -1279,6 +1952,14 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SupplierUpdate"
+              },
+              "example": {
+                "name": "Example supplier",
+                "address": "Example address",
+                "company": "Example company",
+                "deliveryDate": "2030-01-01",
+                "amount": "10.50",
+                "status": "Active"
               }
             }
           }
@@ -1302,6 +1983,21 @@
                     "data"
                   ],
                   "additionalProperties": false
+                },
+                "example": {
+                  "data": {
+                    "id": "000000000000000000000003",
+                    "name": "Example supplier",
+                    "address": "Example address",
+                    "company": "Example company",
+                    "deliveryDate": "2030-01-01",
+                    "amount": "10.50",
+                    "status": "Active",
+                    "currency": "EUR",
+                    "legacyMoney": null,
+                    "createdAt": null,
+                    "updatedAt": "2030-01-01T00:00:00.000Z"
+                  }
                 }
               }
             }
@@ -1312,6 +2008,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1322,6 +2024,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             },
@@ -1341,6 +2049,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_NOT_ALLOWED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1351,6 +2065,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1361,6 +2081,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "CONCURRENT_CHANGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1371,6 +2097,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1381,6 +2113,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1391,11 +2129,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Suppliers"
+        ],
+        "operationId": "put_api_suppliers_supplierId"
       }
     },
     "/api/customers": {
@@ -1472,6 +2220,26 @@
                     "data"
                   ],
                   "additionalProperties": false
+                },
+                "example": {
+                  "data": {
+                    "items": [
+                      {
+                        "id": "000000000000000000000004",
+                        "name": "Example customer",
+                        "email": "customer@example.test",
+                        "address": "Example address",
+                        "phone": "TEST-PHONE",
+                        "country": null,
+                        "photo": null,
+                        "registerDate": "2030-01-01",
+                        "spent": "0.00",
+                        "currency": "EUR",
+                        "createdAt": null,
+                        "updatedAt": null
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -1482,6 +2250,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1492,6 +2266,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             },
@@ -1511,6 +2291,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_NOT_ALLOWED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1521,6 +2307,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1531,6 +2323,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1541,6 +2339,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1551,11 +2355,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Customers"
+        ],
+        "operationId": "get_api_customers"
       }
     },
     "/api/customers/{customerId}": {
@@ -1596,6 +2410,25 @@
                     "data"
                   ],
                   "additionalProperties": false
+                },
+                "example": {
+                  "data": {
+                    "customer": {
+                      "id": "000000000000000000000004",
+                      "name": "Example customer",
+                      "email": "customer@example.test",
+                      "address": "Example address",
+                      "phone": "TEST-PHONE",
+                      "country": null,
+                      "photo": null,
+                      "registerDate": "2030-01-01",
+                      "spent": "0.00",
+                      "currency": "EUR",
+                      "createdAt": null,
+                      "updatedAt": null
+                    },
+                    "history": null
+                  }
                 }
               }
             }
@@ -1606,6 +2439,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1616,6 +2455,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             },
@@ -1635,6 +2480,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_NOT_ALLOWED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1645,6 +2496,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1655,6 +2512,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1665,6 +2528,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1675,11 +2544,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Customers"
+        ],
+        "operationId": "get_api_customers_customerId"
       },
       "patch": {
         "summary": "Modify only supplied permitted profile fields",
@@ -1705,6 +2584,10 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CustomerPatch"
+              },
+              "example": {
+                "name": "Updated example customer",
+                "country": "Example country"
               }
             }
           }
@@ -1728,6 +2611,22 @@
                     "data"
                   ],
                   "additionalProperties": false
+                },
+                "example": {
+                  "data": {
+                    "id": "000000000000000000000004",
+                    "name": "Example customer",
+                    "email": "customer@example.test",
+                    "address": "Example address",
+                    "phone": "TEST-PHONE",
+                    "country": null,
+                    "photo": null,
+                    "registerDate": "2030-01-01",
+                    "spent": "0.00",
+                    "currency": "EUR",
+                    "createdAt": null,
+                    "updatedAt": null
+                  }
                 }
               }
             }
@@ -1738,6 +2637,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1748,6 +2653,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             },
@@ -1767,6 +2678,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_NOT_ALLOWED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1777,6 +2694,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1787,6 +2710,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1797,6 +2726,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1807,11 +2742,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Customers"
+        ],
+        "operationId": "patch_api_customers_customerId"
       }
     },
     "/api/orders": {
@@ -1894,6 +2839,27 @@
                     "data"
                   ],
                   "additionalProperties": false
+                },
+                "example": {
+                  "data": {
+                    "items": [
+                      {
+                        "id": "000000000000000000000005",
+                        "name": "Example customer",
+                        "photo": null,
+                        "address": "Example address",
+                        "productUnits": 1,
+                        "price": "12.34",
+                        "currency": "EUR",
+                        "status": "Completed",
+                        "orderDate": null,
+                        "customerId": null,
+                        "items": null,
+                        "createdAt": null,
+                        "updatedAt": null
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -1904,6 +2870,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1914,6 +2886,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             },
@@ -1933,6 +2911,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_NOT_ALLOWED",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1943,6 +2927,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1953,6 +2943,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1963,6 +2959,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
@@ -1973,11 +2975,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "Illustrative error response"
+                  }
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Orders"
+        ],
+        "operationId": "get_api_orders"
       }
     }
   },

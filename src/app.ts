@@ -15,6 +15,7 @@ import { supplierRoutes } from "./modules/suppliers/routes.js";
 import { customerRoutes } from "./modules/customers/routes.js";
 import { orderRoutes } from "./modules/orders/routes.js";
 import { dashboardRoutes } from "./modules/dashboard/routes.js";
+import { documentationRoutes } from "./documentation.js";
 
 export function createApp(
   config: AppConfig,
@@ -40,6 +41,7 @@ export function createApp(
   app.use((req, res, next) => {
     parseJson(req, res, (error: unknown) => next(requestParsingError(error)));
   });
+  app.use("/api-docs", documentationRoutes());
   app.use("/api/user", authRoutes(config, clock));
   app.use(
     "/api/products",

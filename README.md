@@ -1,103 +1,277 @@
-# E-Pharmacy backend
+<div align="center">
 
-Authenticated Express 5 API using TypeScript, Node.js 26 LTS, MongoDB and Mongoose. Frontend implementation is maintained separately.
+[Deutsch](README.md) · [Українська](README.uk.md) · [English](README.en.md)
 
-## Local setup
+# E-Pharmacy Backend
 
-1. Install Node.js 26 and make a MongoDB 8.x database available.
-2. Run `npm ci`.
-3. Copy `.env.example` to `.env`. Configure `MONGODB_URI`, a cryptographically random `JWT_SECRET` of at least 32 characters, and the exact frontend origins in `CORS_ORIGINS` (comma-separated, without trailing paths).
-4. Set `INITIAL_USER_NAME`, `INITIAL_USER_EMAIL`, and `INITIAL_USER_PASSWORD` locally, then run `npm run user:init`. The command refuses to overwrite an existing account. Remove the initialization password from the environment when finished.
-5. For an authorized local demonstration database, run `npm run seed:demo`. This imports the explicitly synthetic dataset. Original-source import is a separate local operation described below.
-6. Run `npm run dev`, or `npm run build` followed by `npm start`.
+### Geschützte REST API für die Administrationsoberfläche eines Apothekensystems
 
-The default port is 3000. Development, test and production use separate databases and secrets. Do not point tests at a production database. Environment files are excluded from version control. No account password or token signing secret is provided in this repository.
+[![Node.js](https://img.shields.io/badge/Node.js-26.13.0-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0.3-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Express](https://img.shields.io/badge/Express-5.3.0-000000?logo=express&logoColor=white)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas_Free-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
+[![Mongoose](https://img.shields.io/badge/Mongoose-9.12.0-880000?logo=mongoose&logoColor=white)](https://mongoosejs.com/)
+[![OpenAPI](https://img.shields.io/badge/OpenAPI-3.1.0-6BA539?logo=openapiinitiative&logoColor=white)](docs/openapi.json)
+[![Swagger UI](https://img.shields.io/badge/Swagger_UI-5.35.0-85EA2D?logo=swagger&logoColor=000)](#swagger-dokumentation)
+[![Deployment](https://img.shields.io/badge/Deployment-Render_Free-000000?logo=render&logoColor=white)](https://e-pharmacy-api-kz62.onrender.com)
 
-## API
+[Repository](https://github.com/AvalianY/admin_dashboard_back) · [Live API](https://e-pharmacy-api-kz62.onrender.com) · [Swagger UI](https://e-pharmacy-api-kz62.onrender.com/api-docs)
 
-The complete contract is in [docs/openapi.json](docs/openapi.json). Run `npm run docs` after changing contract definitions in `src/openapi.ts`.
+**Swagger: Veröffentlichung ausstehend**
 
-| Methods    | Paths                                                    |
-| ---------- | -------------------------------------------------------- |
-| POST       | `/api/user/login`                                        |
-| GET        | `/api/user/logout`, `/api/user/user-info`                |
-| GET        | `/api/dashboard`, `/api/orders`                          |
-| GET, POST  | `/api/products`, `/api/suppliers`                        |
-| PUT        | `/api/products/:productId`, `/api/suppliers/:supplierId` |
-| DELETE     | `/api/products/:productId`                               |
-| GET        | `/api/customers`                                         |
-| GET, PATCH | `/api/customers/:customerId`                             |
+</div>
 
-All application operations except login require `Authorization: Bearer <token>`. The scheme name is case-insensitive; the exact token value remains case-sensitive. HTTP 401 responses include `WWW-Authenticate: Bearer realm="e-pharmacy"`. Tokens expire after one hour and identify a server-side session. Logout revokes only that session. No public registration, refresh, product restore, order mutation or financial mutation routes are exposed. OpenAPI is a local documentation artifact; there is no additional public documentation endpoint.
+## Inhaltsverzeichnis
 
-Success responses use `{ data, meta? }`; errors use `{ error: { code, message, details? } }`. Deletion and logout return 204 without a body. GET logout responses and authenticated data are not cached. Invalid IDs/requests produce 400, invalid authentication 401, disallowed CORS origins 403, missing resources 404, oversized JSON bodies 413, unsupported charset/content encoding 415, and unexpected errors a sanitized 500. A product update racing a category transition or a supplier update racing a monetary change can return 409; reload before retrying. Unexpected request failures emit an `http_request_failed` diagnostic with the method, route template, status and error category; credentials, raw URLs, bodies and exception messages are excluded.
+- [Über das Projekt](#über-das-projekt)
+- [Funktionen](#funktionen)
+- [Technologien](#technologien)
+- [API-Endpunkte](#api-endpunkte)
+- [Architektur](#architektur)
+- [Projektstruktur](#projektstruktur)
+- [Installation und Start](#installation-und-start)
+- [Umgebungsvariablen](#umgebungsvariablen)
+- [Datenimport](#datenimport)
+- [Verfügbare Skripte](#verfügbare-skripte)
+- [Swagger-Dokumentation](#swagger-dokumentation)
+- [Deployment](#deployment)
+- [Tests und Qualität](#tests-und-qualität)
+- [Autor](#autor)
 
-Search uses the `name` parameter as a literal case-insensitive substring. Products and orders accept only the documented `sortBy` fields and `asc`/`desc` `sortOrder`, with identifier tie-breaking. Product default ordering places known creation timestamps newest first, then unknown historical timestamps in original source order. Customer pages default to `page=1&limit=20`, with a maximum limit of 100. Customer ordering is registration date descending and identifier ascending. Other modules do not implicitly paginate.
+## Über das Projekt
 
-PUT requires every editable product/supplier field. An existing supplier may retain `amount: null` only while its EUR amount remains unknown; a known EUR amount cannot be cleared, and creation requires a valid amount. PATCH changes only supplied permitted customer profile fields. Unknown mutable fields are rejected. Money is supplied as an exact decimal string; stock is a non-negative safe integer; API calendar dates use `YYYY-MM-DD`. Transport JSON bodies use Express's default 100 KB limit, applied after decompression when applicable. Required text is trimmed and must contain a non-whitespace character; passwords are not trimmed. Text fields have no sample-derived business length limits.
+**E-Pharmacy Backend** ist die eigenständige Serveranwendung für ein Apotheken-Admin-Dashboard. Die REST API verbindet geschützte Verwaltungsfunktionen mit MongoDB Atlas: Produkte, Lieferanten, Kunden, historische Bestellungen und Dashboard-Kennzahlen.
 
-## Source integrity and import
+Das Repository enthält die Backend-Implementierung mit modularer Express-Architektur. Eine fertige Frontend-Anwendung ist nicht Bestandteil dieses Projekts. Der veröffentlichte Server verwendet den freigegebenen ursprünglichen Lehrdatensatz mit **190 Domänendokumenten**.
 
-The eight original JSON files and `E-Pharmacy.zip` are private inputs, excluded from Git. Existing local originals remain unchanged in the ignored `data/source/` directory. A clean clone contains no original records. `data/source-manifest.json` is public verification metadata containing only filenames, counts, SHA-256 values and the archive digest; it contains no customer records.
+## Funktionen
 
-For authorized local original-data operations, set `SOURCE_DATA_DIR` to the directory containing the eight original files, using a private environment setting or hidden/local prompt. Relative paths resolve from the command's working directory. If omitted, the importer uses the ignored `data/source/` beside the repository. The approved manifest stays fixed at `data/source-manifest.json`; changing the directory does not bypass its hashes. Original provenance remains `v1:<content hash>`.
+- JWT-Login mit unabhängigen, einstündigen serverseitigen Sessions und gezieltem Logout
+- Produktkatalog mit Erstellung, vollständiger Bearbeitung und logischem Löschen
+- Lieferantenverwaltung mit EUR-Beträgen und unveränderter historischer BDT-Information
+- Kundenlisten mit Pagination, Profilbearbeitung per PATCH und bestätigter Kundenhistorie
+- Lesezugriff auf historische Bestellungen und unveränderte Auftragssnapshots
+- Dashboard mit Gesamtzählern, getrennten 30-Tage-Werten, fünf letzten Registrierungen und Tagesfinanzen
+- Literale Namenssuche; Sortierung für Produkte und Bestellungen; Pagination für Kunden
+- Strikte Zod-Validierung, zentrale Fehlerbehandlung und exakte Decimal128-Geldwerte
+- Explizite null/partial-Metadaten bei fehlenden historischen Informationen
+- SHA-256-geprüfter, idempotenter Import mit Provenance und getrennten Original-/Testdaten
+- OpenAPI-Vertrag und interaktive Swagger UI mit Bearer Authorization
 
-```powershell
-$env:SOURCE_DATA_DIR = Read-Host 'Authorized private source directory'
-# Local original verification: starts its own isolated MongoDB, never Atlas.
-npm run test:source
-# WRITE: only after configuring an explicitly authorized local target database.
-npm run seed
+## Technologien
+
+| Technologie | Version | Aufgabe |
+| --- | --- | --- |
+| Node.js | 26.13.0 (>=26 <27) | Laufzeit, festgelegt in .node-version |
+| TypeScript | 6.0.3 | Statische Typisierung |
+| Express | 5.3.0 | HTTP-Routing und Middleware |
+| MongoDB Atlas | Free / MongoDB 8.0 | Persistente Domänendaten und Sessions |
+| Mongoose | 9.12.0 | Modelle, Schemas und Datenzugriff |
+| Zod | 4.6.7 | Validierung von Konfiguration und Requests |
+| JWT / jose | 6.2.17 | JWT-Signatur und -Prüfung |
+| Vitest / Supertest | 5.1.0 / 7.3.2 | Tests und HTTP-Integration |
+| OpenAPI / Ajv | 3.1.0 / 8.20.0 | API-Vertrag und Schema-Prüfung |
+| Swagger UI Express / UI | 5.0.1 / 5.35.0 | Interaktive Dokumentation im bestehenden Server |
+| Render | Free, Frankfurt | HTTPS-Hosting in Frankfurt |
+
+## API-Endpunkte
+
+| Methode | Endpunkt | Zweck | Bearer |
+| --- | --- | --- | --- |
+| POST | `/api/user/login` | Anmelden und Session erstellen | Nein |
+| GET | `/api/user/user-info` | Angemeldetes Profil lesen | Ja |
+| GET | `/api/user/logout` | Aktuelle Session widerrufen | Ja |
+| GET | `/api/dashboard` | Kennzahlen und Dashboard-Daten lesen | Ja |
+| GET | `/api/products` | Aktive Produkte suchen und sortieren | Ja |
+| POST | `/api/products` | Produkt erstellen | Ja |
+| PUT | `/api/products/{productId}` | Editierbare Produktfelder vollständig ersetzen | Ja |
+| DELETE | `/api/products/{productId}` | Produkt logisch löschen | Ja |
+| GET | `/api/suppliers` | Lieferanten suchen | Ja |
+| POST | `/api/suppliers` | Lieferant erstellen | Ja |
+| PUT | `/api/suppliers/{supplierId}` | Lieferant vollständig bearbeiten | Ja |
+| GET | `/api/customers` | Kunden suchen und seitenweise lesen | Ja |
+| GET | `/api/customers/{customerId}` | Kundenprofil und bestätigte Historie lesen | Ja |
+| PATCH | `/api/customers/{customerId}` | Erlaubte Profilfelder teilweise bearbeiten | Ja |
+| GET | `/api/orders` | Bestellungen suchen und sortieren | Ja |
+
+Erfolgreiche Antworten verwenden `{ data, meta? }`, Fehler `{ error: { code, message, details? } }`. Erstellung liefert 201, Logout und Löschung 204 ohne Body. Geschützte Operationen erwarten `Authorization: Bearer <token>`; 401 enthält eine Bearer-Challenge. PUT benötigt alle editierbaren Felder, PATCH nur die angegebenen erlaubten Profilfelder.
+
+Die vollständigen Parameter, Schemas und Statuscodes stehen im [OpenAPI-Vertrag](docs/openapi.json). Swagger-Routen dokumentieren diese **15 Geschäftsoperationen** und sind keine zusätzlichen Geschäftsoperationen.
+
+## Architektur
+
+Die Module unter `src/modules/` trennen Router, Services und Mongoose-Modelle. Zod prüft Eingaben vor dem Datenzugriff; gemeinsame Hilfen verwalten DTOs, Geldwerte, UTC-Zeiträume, Vollständigkeitsmetadaten und Fehler.
+
+`products`, `suppliers`, `customers`, `orders` und `financialtransactions` enthalten Domänendaten; `users` und `sessions` bilden die Authentifizierung ab. JWTs verweisen auf serverseitige Sessions, gespeicherte Token-Hashes ermöglichen einen gezielten Widerruf. Es gibt keine öffentliche Registrierung oder Refresh-Route.
+
+`src/openapi.ts` erzeugt `docs/openapi.json`; dieselbe Definition wird für Swagger in den Server kompiliert. Die ausführlichen Import-, Kategorie- und Historienregeln bleiben in der [technischen Referenz](docs/backend-reference.md) erhalten.
+
+## Projektstruktur
+
+```text
+admin_dashboard_back/
+├── src/
+│   ├── app.ts
+│   ├── server.ts
+│   ├── config.ts
+│   ├── db.ts
+│   ├── documentation.ts
+│   ├── openapi.ts
+│   ├── modules/
+│   │   ├── auth/
+│   │   ├── customers/
+│   │   ├── dashboard/
+│   │   ├── orders/
+│   │   ├── products/
+│   │   ├── suppliers/
+│   │   └── transactions/
+│   ├── shared/
+│   ├── import/
+│   └── scripts/
+├── docs/
+│   ├── openapi.json
+│   ├── backend-reference.md
+│   └── free-deployment.md
+├── tests/
+├── local-tests/
+├── data/
+│   ├── demo/
+│   └── source-manifest.json
+├── scripts/generate-demo.mjs
+├── .env.example
+├── .node-version
+├── README.md
+├── README.uk.md
+├── README.en.md
+├── package.json
+└── render.yaml
 ```
 
-Original JSON must not be published or uploaded to Atlas while permission for that third-party transfer is unconfirmed. Missing private data makes `seed` / `test:source` fail clearly; neither command substitutes synthetic data. Do not run these commands against a cloud database under the demonstration procedure.
+## Installation und Start
 
-The public [synthetic dataset](data/demo/README.md) is independently generated by `scripts/generate-demo.mjs`, without reading original records. It uses numbered demo names, fictional addresses, non-routable phone tokens and reserved `example.test` email/image hosts. Image URLs are placeholders. Its separate manifest uses `demo-v1:<content hash>`. `.gitattributes` preserves LF for demo JSON so checkout normalization cannot invalidate its hashes. `npm run seed:demo` explicitly selects it and ignores `SOURCE_DATA_DIR`. Regenerate with `npm run demo:generate`; tests also verify reproducibility. Never regenerate fixtures into the original directory or mix datasets in one database: the import version guard requires an explicit migration.
+Voraussetzungen: Node.js **26.x** (Referenzversion **26.13.0**), npm, Git und eine eigene MongoDB-8.x-Entwicklungsdatenbank.
 
-The original administration import preserves 60 products, 5 suppliers, 88 customers, 25 orders and 12 financial transactions. Pharmacy lists and reviews remain private source materials; this administrative specification defines no API modules for them. The synthetic dataset deliberately uses the same domain counts to exercise the required behavior; its values are fictional and its hashes/version are distinct.
+Für einen neuen Clone:
 
-Each row has a unique ObjectId and source-version/file/position provenance. Original product IDs are retained as non-unique `legacyId` values. Repeated products, customer emails and financial rows are preserved. Source hashes are checked before writing. Reimport uses insert-only operations keyed by provenance; it neither overwrites user edits nor restores logically deleted products. If interrupted, the same version can be rerun. Source corrections require explicit migrations and an approved manifest; changing source JSON is not an ordinary import operation.
+```bash
+git clone https://github.com/AvalianY/admin_dashboard_back.git
+cd admin_dashboard_back
+npm ci
+```
 
-| Source field                 | Stored/API interpretation                                                     |
-| ---------------------------- | ----------------------------------------------------------------------------- |
-| customer `photo` or `image`  | `photo`                                                                       |
-| customer `register_date`     | ISO calendar `registerDate`, without an invented time                         |
-| order `order_date`           | ISO calendar `orderDate`                                                      |
-| order `products`             | integer `productUnits`, not invented positions                                |
-| supplier `suppliers`, `date` | `company`, `deliveryDate`                                                     |
-| product `id`                 | non-unique `legacyId`                                                         |
-| formatted monetary strings   | exact Decimal128, with original lexical form retained in the unchanged source |
+Erstelle danach `.env` anhand von `.env.example` (`cp .env.example .env`, in PowerShell `Copy-Item .env.example .env`). Konfiguriere eine **separate Entwicklungsdatenbank**, ein zufälliges JWT_SECRET mit mindestens 32 Zeichen und die exakt erlaubten Origins. Die ursprüngliche Produktionsverbindung gehört nicht in lokale Testläufe.
 
-Historical `createdAt`/`updatedAt` remain null when unknown. `importedAt` is technical provenance. Neither import time nor the ObjectId timestamp is substituted for a historical business date. New records receive actual creation/modification timestamps.
+Die einmalige Kontoinitialisierung benötigt die realen, lokal eingegebenen INITIAL_USER_* Werte. Übergib das Passwort verdeckt im Prozess und entferne es anschließend; speichere es nicht in Projektdateien. Ein bestehendes Konto wird nicht überschrieben. Details: [technische Referenz](docs/backend-reference.md).
 
-## Categories, money and deletion
+```bash
+npm run user:init
+npm run seed:demo
+npm run dev
+```
 
-New products use the nine approved categories. Imported Heart/Leg values remain unchanged. An existing product may retain its current legacy category or move into the approved catalog. Switching between legacy categories or returning to legacy is forbidden. A supplier is a string on a product; editing a supplier document does not rename product strings.
+```bash
+npm run build
+npm start
+```
 
-Product deletion sets `deletedAt` and retains the document. Deleted products are excluded from active catalogs and product counters. Historical order snapshots are read from the order, never reconstructed from current product data.
+## Umgebungsvariablen
 
-Operational currency is EUR. Values without a conflicting source marker use EUR. Supplier values explicitly marked with the BDT symbol retain their exact legacy amount and currency; their normalized EUR `amount` is null. No exchange rate is assumed, no conversion service is used, and unconverted amounts are not aggregated with EUR. A user-entered EUR supplier update is a new current value and does not establish a historical conversion; legacy provenance remains preserved. Financial signs and Income/Expense/Error classifications are retained. Customer `spent` is a stored snapshot, not an inferred sum.
+| Variable | Bedeutung |
+| --- | --- |
+| `MONGODB_URI` | Erforderliche MongoDB-Verbindung mit explizitem Datenbanknamen; nur privat konfigurieren |
+| `JWT_SECRET` | Erforderlicher, zufälliger Signaturschlüssel mit mindestens 32 Zeichen; zwischen Serverstarts stabil halten |
+| `NODE_ENV` | development, test oder production; Standard development |
+| `PORT` | Lokaler Standard 3000; auf Render den bereitgestellten PORT verwenden |
+| `CORS_ORIGINS` | Kommagetrennte exakte Origins ohne Pfad oder Wildcard; für lokale Swagger UI http://localhost:3000 |
+| `SOURCE_DATA_DIR` | Optionales Verzeichnis der privaten Original-JSON; Standard data/source/ |
+| `INITIAL_USER_NAME` | Name für einmaliges user:init; nur lokal im administrativen Prozess |
+| `INITIAL_USER_EMAIL` | Gültige E-Mail für user:init; kein Server-Default |
+| `INITIAL_USER_PASSWORD` | Verdeckte lokale Passworteingabe nur für user:init; nicht auf Render setzen |
 
-## Completeness and Dashboard
+Bereits gesetzte Prozessvariablen haben Vorrang vor `.env`, auch bei `--env-file-if-exists`. `.env`, Original-JSON und das Quellarchiv sind von Git ausgeschlossen. Ein sauberer Clone enthält keine ursprünglichen personenbezogenen Datensätze.
 
-`meta.completeness` is `complete` or `partial`; `meta.missingData` identifies unavailable information. Numeric zero means a confirmed zero, an empty array means a confirmed empty set, and null denotes unavailable information. A non-empty confirmed subset can be returned with partial metadata when other source records cannot be classified.
+## Datenimport
 
-Dashboard returns separate `totals` and `last30Days`. Initial overall totals are 60/5/88, calculated from the database. Thirty-day metrics use the current UTC calendar date and previous 29 dates, with an exclusive end at the next UTC midnight. Products use known creation dates and exclude deleted records; suppliers use known creation dates; customers use registration dates. Unknown applicable dates make the affected count null, rather than classifying those records outside the period.
+Die Datenquellen sind absichtlich getrennt:
 
-Recent Customers contains the five latest registrations across all history, with current profile values. Income/Expenses Today includes only confirmed current-UTC-date transactions. Undated records remain stored but are not falsely included. If no match is known and undated records remain, the section is null; if all dates are known and no transaction matches, it is an empty array.
+| Quelle | Befehl | Einsatz |
+| --- | --- | --- |
+| `v1` | `npm run seed` | Ursprünglicher Lehrdatensatz aus dem ignorierten data/source/; Produktion e_pharmacy, 190 Dokumente |
+| `demo-v1` | `npm run seed:demo` | Deterministisch erzeugte synthetische Daten aus data/demo/; ausschließlich Entwicklung und isolierte Tests |
 
-Initial source limitations are explicit: product/supplier historical creation dates are unknown; all 12 financial dates and all customer countries are unknown; verified customer relationships and historical order positions are absent. Initial order `items` and customer `history` therefore use null with missing-data metadata. Combined history supports distinguishable order/transaction entries once verified links exist. No matching by names or email is performed. Technical relationship status distinguishes unknown, linked and confirmed non-applicable relationships; future corrections must be verified migrations.
+Der Import prüft das jeweils eigene Manifest und SHA-256, behält alle Quellzeilen einschließlich Duplikaten und speichert eine eindeutige Provenance. Wiederholtes Einlesen desselben Datensatzes fügt keine weiteren Datensätze hinzu und überschreibt keine Bearbeitungen. `seed` ist deshalb **kein Backup-Restore**. Original-JSON werden weder nach GitHub noch auf Render hochgeladen.
 
-## Verification
+Die Produktion enthält 60 Produkte, 5 Lieferanten, 88 Kunden, 25 Bestellungen und 12 Finanzvorgänge. Unbekannte historische Daten bleiben unbekannt; BDT wird nicht fiktiv in EUR umgerechnet. `seed:demo` darf nicht gegen die öffentliche Produktionsdatenbank laufen.
 
-After a clean clone, `npm ci` followed by `npm run check` runs type checking, lint, all public unit/integration tests and production build without private originals. Public tests explicitly select committed synthetic fixtures and do not skip missing-data checks. They validate actual requests/responses against OpenAPI and validate the document itself. Run `npm audit` for dependency advisories and `npm run docs` to regenerate OpenAPI.
+## Verfügbare Skripte
 
-`npm run test:source` is a separate local verification suite for authorized originals. It checks all eight hashes, every imported business field across 190 records, unchanged original provenance, duplicate preservation, reimport and dataset separation. It fails if originals are missing instead of reporting skipped verification as success. It is not a prerequisite for a clean-clone public test run. The command loads `.env` if present; public tests do not need it. Both suites always create their own isolated MongoDB processes.
+| Befehl | Aufgabe |
+| --- | --- |
+| `npm run dev` | TypeScript-Entwicklungsserver mit Watch-Modus |
+| `npm run build` | TypeScript nach dist/ kompilieren |
+| `npm start` | Kompilierten Production-Server starten |
+| `npm run typecheck` | Typen ohne Ausgabe prüfen |
+| `npm run lint` | ESLint ausführen |
+| `npm test` | Öffentliche isolierte Tests ausführen |
+| `npm run test:watch` | Tests im Watch-Modus |
+| `npm run test:source` | Originaldaten separat und isoliert prüfen; fehlende Dateien sind ein Fehler |
+| `npm run seed` | Freigegebene Originaldaten importieren |
+| `npm run seed:demo` | Synthetische Entwicklungsdaten importieren |
+| `npm run demo:generate` | Synthetische Fixtures reproduzierbar erzeugen |
+| `npm run user:init` | Einmalig ein Konto initialisieren, ohne bestehende Konten zu überschreiben |
+| `npm run docs` | OpenAPI-JSON aus der bestehenden Definition erzeugen |
+| `npm run check` | Typecheck, ESLint, Tests und Build nacheinander ausführen |
 
-Integration tests start and stop their own MongoDB 8.0.17 process using `mongodb-memory-server`; the first run needs access to MongoDB's official download host. Binaries are cached under `node_modules/.cache/mongodb-binaries`, or the directory set by `MONGOMS_DOWNLOAD_DIR`. Test databases are ephemeral and isolated. The database TTL cleanup monitor is disabled only in tests because the application clock is controlled; token and session expiration are still explicitly verified. Production retains its session TTL index. Extra fixtures that establish verified historical dates/relationships are restricted to isolated tests; they are not corrections to private originals or cloud demonstration data.
+## Swagger-Dokumentation
 
-## Render preparation
+Lokal: [http://localhost:3000/api-docs](http://localhost:3000/api-docs). Die UI zeigt alle 15 Operationen, nach Modulen gruppiert, mit Parametern, Request-/Response-Beispielen, Schemas und Statuscodes. Der JSON-Vertrag liegt unter `/api-docs/openapi.json`. Die Beispiele sind synthetisch.
 
-`render.yaml` explicitly selects one Free Web Service in Frankfurt, Node.js 26.13.0 and disabled automatic deploy triggers. The server binds the assigned port on `0.0.0.0` after connecting to MongoDB. Use MongoDB Atlas Free on AWS Frankfurt; configure the credential-bearing URI only in secret environment settings. The initial browser-origin list is empty until a frontend origin is approved. Account initialization and the synthetic `seed:demo` command run locally as separately authorized administrative operations, not build/startup hooks. Production build emits compiled code only; startup requires neither original nor synthetic JSON. Original records are not authorized for Atlas transfer.
+1. Den passenden Bereich und die Operation öffnen.
+2. Über Login mit den eigenen Zugangsdaten einen Token erhalten.
+3. Unter **Authorize** nur den Tokenwert für das vorhandene Bearer-Schema eintragen.
+4. **Try it out** aktivieren und den Request bewusst ausführen.
+5. Mit Logout die aktuelle Session widerrufen.
 
-Follow the [free deployment runbook](docs/free-deployment.md) for current provider references, billing safeguards, environment variables, scoped database/network access, secure initialization, approval gates and all 15 public API smoke tests. In particular, do not attach a payment method or enable the paid Atlas Free-cluster backup subscription. The Blueprint creates no database, disk or worker. Service creation can trigger an initial deployment even when later automatic deployments are off; publication, cloud creation, production writes and deployment require their respective approvals.
+Tokens werden nicht über Reloads oder Browser-Sessions hinweg gespeichert. Schreiboperationen ändern die ausgewählte Datenbank und benötigen in Produktion ein ausdrücklich genehmigtes Testfenster mit Backup und Wiederherstellung. Für Browser-Requests muss der exakte API-Origin in CORS_ORIGINS erlaubt sein; JWT bleibt für alle geschützten Operationen verpflichtend.
+
+Geplante öffentliche UI: [https://e-pharmacy-api-kz62.onrender.com/api-docs](https://e-pharmacy-api-kz62.onrender.com/api-docs). **Noch nicht veröffentlicht:** Push und Render-Deploy benötigen eine separate Freigabe. Bis dahin ist dort ein 404 möglich.
+
+## Deployment
+
+Die bestehende API läuft unter [https://e-pharmacy-api-kz62.onrender.com](https://e-pharmacy-api-kz62.onrender.com) auf **Render Free in Frankfurt**, mit **MongoDB Atlas Free auf AWS Frankfurt**. Der Root-Pfad darf 404 liefern; die Geschäftsoperationen sind geschützt.
+
+`render.yaml` legt Node 26.13.0, `npm ci --include=dev && npm run build`, `npm start` und deaktivierte automatische Deploys fest. Der Server bindet nach erfolgreicher DB-Verbindung an `0.0.0.0` und den zugewiesenen PORT. Zugangsdaten werden in privaten Environment Settings hinterlegt; Init und Import gehören nicht in Build-/Start-Hooks.
+
+Render Free fährt Dienste nach Inaktivität herunter; der nächste Request kann einen Cold Start auslösen. Daten und Sessions bleiben in Atlas. Das lokale Dateisystem ist nicht dauerhaft. [Free-Limits](https://render.com/docs/free). `render.yaml` erlaubt ausschließlich `https://e-pharmacy-api-kz62.onrender.com` als Production-Origin für Swagger. Beim späteren freigegebenen Deployment denselben Wert in den tatsächlichen Render Environment Settings prüfen: Die lokale YAML-Änderung aktualisiert einen bestehenden Service nicht automatisch. Der Frontend-Origin wird erst nach seiner Freigabe ergänzt.
+
+Ablauf, sichere Administration und Freigabegrenzen: [Deployment-Runbook](docs/free-deployment.md). Neue Veröffentlichungsschritte sind separat zu genehmigen.
+
+## Tests und Qualität
+
+Die öffentlichen Tests starten eigene, kurzlebige MongoDB-Instanzen und verwenden synthetische Fixtures. Sie benötigen keine privaten Originaldaten. `test:source` prüft die Originale separat und schlägt bei fehlenden Dateien fehl. Tests werden nicht gegen Atlas ausgeführt.
+
+Die Suite prüft Authentifizierung, Sessions, Kataloge, Dashboard, Import, Request-/Response-Verträge, Fehlerbehandlung und den tatsächlichen kompilierten Server. Swagger-Prüfungen decken HTML, lokale Assets, alle 15 Operationen, Beispiele, Bearer-Konfiguration, Token-Persistenz-Einstellungen und unveränderte CORS-/JWT-Grenzen ab.
+
+**Live-Nachweis vom 13.11.2026:** alle 15 Geschäftsoperationen, 74 HTTPS-Requests und das exakte Wiederherstellen der 190 Originaldokumente nach temporären Teständerungen — PASS. Zusätzlich wurden zuvor 49 sichere HTTPS-Szenarien einschließlich Cold Start geprüft. Die neue Swagger UI ist lokal geprüft; ein Production-Nachweis folgt erst nach ihrem gesonderten Deployment.
+
+Lokale Abschlussprüfung: TypeScript, ESLint und Production-Build erfolgreich; **149 öffentliche Tests** und **5 separate Originaldaten-Tests** bestanden. `npm audit` meldet **0 bekannte Schwachstellen**. Der Browser-Test des kompilierten Servers bestätigt alle 15 Swagger-Operationen, Bearer-Übertragung, Try it out und das Löschen der Autorisierung nach einem Reload.
+
+```bash
+npm run check
+npm run test:source
+npm audit
+```
+
+## Autor
+
+Dieses Backend wurde als **individuelles Projekt** entwickelt.
+
+GitHub: [@AvalianY](https://github.com/AvalianY)
+
+---
+
+<div align="center">
+
+Eigenständiges Backend-Projekt mit Fokus auf sichere API-Verträge, nachvollziehbare Daten und reproduzierbare Prüfungen.
+
+</div>
