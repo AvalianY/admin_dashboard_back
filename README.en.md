@@ -15,7 +15,7 @@
 [![Swagger UI](https://img.shields.io/badge/Swagger_UI-5.35.0-85EA2D?logo=swagger&logoColor=000)](#swagger-documentation)
 [![Deployment](https://img.shields.io/badge/Deployment-Render_Free-000000?logo=render&logoColor=white)](https://e-pharmacy-api-kz62.onrender.com)
 
-[Repository](https://github.com/AvalianY/admin_dashboard_back) · [Live API](https://e-pharmacy-api-kz62.onrender.com) · [Swagger UI](https://e-pharmacy-api-kz62.onrender.com/api-docs/)
+[Repository](https://github.com/AvalianY/admin_dashboard_back) · [Frontend](https://github.com/AvalianY/admin_dashboard_front) · [Live API](https://e-pharmacy-api-kz62.onrender.com) · [Swagger UI](https://e-pharmacy-api-kz62.onrender.com/api-docs/)
 
 **Swagger UI: live**
 
@@ -42,8 +42,10 @@
 
 **E-Pharmacy Backend** is the standalone server application for a pharmacy administration system. Its REST API provides protected access to products, suppliers, customers, historical orders and Dashboard metrics, backed by MongoDB Atlas.
 
-This repository contains a modular Express backend. A completed frontend application is not included. The deployed server uses the approved original educational dataset of **190 domain documents**.
+This repository contains the standalone modular Express backend. The completed responsive [frontend application](https://github.com/AvalianY/admin_dashboard_front) is the second part of the same E-Pharmacy project. The deployed server uses the approved original educational dataset of **190 domain documents**.
 
+
+The server enforces `admin` and `demo` roles. Demo allows business GETs plus Login/profile/Logout; all seven business mutations return `403 DEMO_READ_ONLY`. Unassigned roles receive no business access. Separately deploy and verify the protection before public demo access; credentials are not published. [Migration and secure provisioning](docs/demo-access.md).
 ## Features
 
 - JWT login with independent one-hour server-side sessions and targeted logout
@@ -222,6 +224,8 @@ Production contains 60 products, 5 suppliers, 88 customers, 25 orders and 12 fin
 | `npm run seed:demo` | Import synthetic development data |
 | `npm run demo:generate` | Reproduce synthetic fixtures deterministically |
 | `npm run user:init` | Initialize an account once without overwriting an existing account |
+| `npm run user:admin-role` | Plan/apply a reviewed existing administrator role; read-only by default |
+| `npm run user:init-demo` | Securely initialize demo after server/data gates have been verified |
 | `npm run docs` | Generate OpenAPI JSON from the existing definition |
 | `npm run check` | Run typecheck, ESLint, tests and build in sequence |
 
@@ -255,9 +259,9 @@ Public tests start their own ephemeral MongoDB instances and use synthetic fixtu
 
 The suite covers authentication, sessions, catalogs, Dashboard, import, request/response contracts, error handling and the actual compiled server. Swagger checks cover HTML, local assets, all 16 operations, examples, Bearer configuration, token-persistence settings and unchanged CORS/JWT boundaries. Customer-creation tests use an isolated MongoDB and cover validation, UTC boundaries, Decimal128, five-row pagination, profile updates, Dashboard and preservation of existing records.
 
-**Live evidence from 2026-11-13:** all 15 business operations, 74 HTTPS requests and exact restoration of all 190 original documents after temporary test mutations — PASS. An earlier run also verified 49 safe HTTPS scenarios including a cold start. Following publication, the public Swagger UI and its OpenAPI JSON return HTTP 200; the specification includes all 15 operations and the existing Bearer scheme.
+**Live evidence from 2026-11-13:** all 15 business operations, 74 HTTPS requests and exact restoration of all 190 original documents after temporary test mutations — PASS. An earlier run also verified 49 safe HTTPS scenarios including a cold start. Following publication, the public Swagger UI and its OpenAPI JSON return HTTP 200; the current specification includes 16 operations and the existing Bearer scheme.
 
-Local customer-creation extension checks passed: TypeScript, ESLint, production build, **200 public tests** and **5 separate original-data tests**; `npm audit` reports **0 known vulnerabilities**. A separate browser check of the compiled server renders all 16 Swagger operations and verifies the new request body, documented 201 response, Bearer transmission and cleared authorization after reload. Its dummy token returns the expected 401 without a database connection; valid creation is verified against isolated MongoDB by integration tests. Production acceptance of the new operation is still pending. Reproduce the local checks:
+Current local role/customer checks passed: TypeScript, ESLint, production build, **220 public tests** and **5 separate original-data tests**; `npm audit` reports **0 known vulnerabilities**. A separate browser check of the compiled server renders all 16 Swagger operations and verifies the new request body, documented 201 response, Bearer transmission and cleared authorization after reload. Its dummy token returns the expected 401 without a database connection; valid creation is verified against isolated MongoDB by integration tests. Production acceptance of the new operation is still pending. Reproduce the local checks:
 
 ```bash
 npm run check

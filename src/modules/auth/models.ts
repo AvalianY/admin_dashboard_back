@@ -1,9 +1,12 @@
 import { Schema, model, Types } from "mongoose";
 
+export const userRoles = ["admin", "demo"] as const;
+export type UserRole = (typeof userRoles)[number];
 export interface UserRecord {
   _id: Types.ObjectId;
   name: string;
   email: string;
+  role?: UserRole;
   passwordHash: string;
   createdAt: Date;
 }
@@ -22,6 +25,7 @@ export const User = model<UserRecord>(
     {
       name: { type: String, required: true },
       email: { type: String, required: true, unique: true },
+      role: { type: String, enum: userRoles, required: true },
       passwordHash: { type: String, required: true, select: false },
       createdAt: { type: Date, required: true },
     },

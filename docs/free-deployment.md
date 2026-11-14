@@ -1,5 +1,9 @@
 # Free deployment runbook
 
+## Role release preparation — 14 November 2026
+
+The owner authorized Git publication of the admin/demo role update and confirmed that automatic deployments remain off. Public viewing of v1 was explicitly reconfirmed. This is not permission to deploy or provision the production demo account. Read-only inspection found one existing administrator without a role and all 190 domain documents. Follow the separate [demo rollout plan](demo-access.md): reviewed exact-identity admin migration before the protected server deployment, then secure demo provisioning and live denial checks before distributing credentials. No migration, production account creation or deployment is performed by startup or Git push.
+
 Status: the existing Atlas database was initialized and verified on 2026-11-13
 under the owner's explicit authorization. Provider documentation was checked on
 2026-11-09. Render creation,

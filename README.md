@@ -15,7 +15,7 @@
 [![Swagger UI](https://img.shields.io/badge/Swagger_UI-5.35.0-85EA2D?logo=swagger&logoColor=000)](#swagger-dokumentation)
 [![Deployment](https://img.shields.io/badge/Deployment-Render_Free-000000?logo=render&logoColor=white)](https://e-pharmacy-api-kz62.onrender.com)
 
-[Repository](https://github.com/AvalianY/admin_dashboard_back) · [Live API](https://e-pharmacy-api-kz62.onrender.com) · [Swagger UI](https://e-pharmacy-api-kz62.onrender.com/api-docs/)
+[Repository](https://github.com/AvalianY/admin_dashboard_back) · [Frontend](https://github.com/AvalianY/admin_dashboard_front) · [Live API](https://e-pharmacy-api-kz62.onrender.com) · [Swagger UI](https://e-pharmacy-api-kz62.onrender.com/api-docs/)
 
 **Swagger UI: online verfügbar**
 
@@ -42,8 +42,10 @@
 
 **E-Pharmacy Backend** ist die eigenständige Serveranwendung für ein Apotheken-Admin-Dashboard. Die REST API verbindet geschützte Verwaltungsfunktionen mit MongoDB Atlas: Produkte, Lieferanten, Kunden, historische Bestellungen und Dashboard-Kennzahlen.
 
-Das Repository enthält die Backend-Implementierung mit modularer Express-Architektur. Eine fertige Frontend-Anwendung ist nicht Bestandteil dieses Projekts. Der veröffentlichte Server verwendet den freigegebenen ursprünglichen Lehrdatensatz mit **190 Domänendokumenten**.
+Dieses Repository enthält das eigenständige modulare Express-Backend. Die fertige responsive [Frontend-Anwendung](https://github.com/AvalianY/admin_dashboard_front) ist die zweite Komponente desselben E-Pharmacy-Projekts. Der veröffentlichte Server verwendet den freigegebenen ursprünglichen Lehrdatensatz mit **190 Domänendokumenten**.
 
+
+Die Rollen `admin` und `demo` werden serverseitig geprüft. Demo erlaubt Geschäfts-GETs sowie Login/Profil/Logout; alle sieben Geschäftsänderungen liefern `403 DEMO_READ_ONLY`. Ein Konto ohne zugewiesene Rolle erhält keine Geschäftsrechte. Die neue Absicherung ist vor öffentlichem Demo-Zugang gesondert auszurollen und zu prüfen; Zugangsdaten werden nicht veröffentlicht. [Migration und sichere Initialisierung](docs/demo-access.md).
 ## Funktionen
 
 - JWT-Login mit unabhängigen, einstündigen serverseitigen Sessions und gezieltem Logout
@@ -222,6 +224,8 @@ Die Produktion enthält 60 Produkte, 5 Lieferanten, 88 Kunden, 25 Bestellungen u
 | `npm run seed:demo` | Synthetische Entwicklungsdaten importieren |
 | `npm run demo:generate` | Synthetische Fixtures reproduzierbar erzeugen |
 | `npm run user:init` | Einmalig ein Konto initialisieren, ohne bestehende Konten zu überschreiben |
+| `npm run user:admin-role` | Geprüfte bestehende Admin-Rolle planen/anwenden; standardmäßig nur lesen |
+| `npm run user:init-demo` | Demo-Konto nach geprüftem Server-/Daten-Gate sicher initialisieren |
 | `npm run docs` | OpenAPI-JSON aus der bestehenden Definition erzeugen |
 | `npm run check` | Typecheck, ESLint, Tests und Build nacheinander ausführen |
 
@@ -255,9 +259,9 @@ Die öffentlichen Tests starten eigene, kurzlebige MongoDB-Instanzen und verwend
 
 Die Suite prüft Authentifizierung, Sessions, Kataloge, Dashboard, Import, Request-/Response-Verträge, Fehlerbehandlung und den tatsächlichen kompilierten Server. Swagger-Prüfungen decken HTML, lokale Assets, alle 16 Operationen, Beispiele, Bearer-Konfiguration, Token-Persistenz-Einstellungen und unveränderte CORS-/JWT-Grenzen ab. Tests zur Kundenerstellung verwenden eine isolierte MongoDB und prüfen Validierung, UTC-Grenzen, Decimal128, Fünfer-Pagination, Profiländerungen, Dashboard und den Erhalt vorhandener Datensätze.
 
-**Live-Nachweis vom 13.11.2026:** alle 15 Geschäftsoperationen, 74 HTTPS-Requests und das exakte Wiederherstellen der 190 Originaldokumente nach temporären Teständerungen — PASS. Zusätzlich wurden zuvor 49 sichere HTTPS-Szenarien einschließlich Cold Start geprüft. Nach der Veröffentlichung liefern die öffentliche Swagger UI und das zugehörige OpenAPI-JSON-Dokument HTTP 200; die Spezifikation enthält alle 15 Operationen und das bestehende Bearer-Schema.
+**Live-Nachweis vom 13.11.2026:** alle 15 Geschäftsoperationen, 74 HTTPS-Requests und das exakte Wiederherstellen der 190 Originaldokumente nach temporären Teständerungen — PASS. Zusätzlich wurden zuvor 49 sichere HTTPS-Szenarien einschließlich Cold Start geprüft. Nach der Veröffentlichung liefern die öffentliche Swagger UI und das zugehörige OpenAPI-JSON-Dokument HTTP 200; die aktuelle Spezifikation enthält 16 Operationen und das bestehende Bearer-Schema.
 
-Lokale Prüfung der Kundenerweiterung bestanden: TypeScript, ESLint, Production-Build, **200 öffentliche Tests** und **5 separate Originaldaten-Tests**; `npm audit` meldet **0 bekannte Schwachstellen**. Ein separater Browser-Test des kompilierten Servers zeigt alle 16 Swagger-Operationen und prüft den neuen Request-Body, die dokumentierte 201-Antwort, Bearer-Übertragung und gelöschte Autorisierung nach einem Reload. Sein Testtoken liefert erwartungsgemäß 401 ohne Datenbankverbindung; gültige Erstellung prüfen Integrationstests gegen isolierte MongoDB. Die Production-Abnahme der neuen Operation steht noch aus. Lokale Prüfungen wiederholen:
+Aktuelle lokale Rollen-/Kundenprüfungen bestanden: TypeScript, ESLint, Production-Build, **220 öffentliche Tests** und **5 separate Originaldaten-Tests**; `npm audit` meldet **0 bekannte Schwachstellen**. Ein separater Browser-Test des kompilierten Servers zeigt alle 16 Swagger-Operationen und prüft den neuen Request-Body, die dokumentierte 201-Antwort, Bearer-Übertragung und gelöschte Autorisierung nach einem Reload. Sein Testtoken liefert erwartungsgemäß 401 ohne Datenbankverbindung; gültige Erstellung prüfen Integrationstests gegen isolierte MongoDB. Die Production-Abnahme der neuen Operation steht noch aus. Lokale Prüfungen wiederholen:
 
 ```bash
 npm run check

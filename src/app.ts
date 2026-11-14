@@ -9,7 +9,7 @@ import {
   requestParsingError,
 } from "./shared/errors.js";
 import { authRoutes } from "./modules/auth/routes.js";
-import { requireAuth } from "./modules/auth/service.js";
+import { requireAuth, requireBusinessAccess } from "./modules/auth/service.js";
 import { productRoutes } from "./modules/products/routes.js";
 import { supplierRoutes } from "./modules/suppliers/routes.js";
 import { customerRoutes } from "./modules/customers/routes.js";
@@ -46,22 +46,31 @@ export function createApp(
   app.use(
     "/api/products",
     requireAuth(config.jwtSecret, clock),
+    requireBusinessAccess,
     productRoutes(clock),
   );
   app.use(
     "/api/suppliers",
     requireAuth(config.jwtSecret, clock),
+    requireBusinessAccess,
     supplierRoutes(clock),
   );
   app.use(
     "/api/customers",
     requireAuth(config.jwtSecret, clock),
+    requireBusinessAccess,
     customerRoutes(clock),
   );
-  app.use("/api/orders", requireAuth(config.jwtSecret, clock), orderRoutes());
+  app.use(
+    "/api/orders",
+    requireAuth(config.jwtSecret, clock),
+    requireBusinessAccess,
+    orderRoutes(),
+  );
   app.use(
     "/api/dashboard",
     requireAuth(config.jwtSecret, clock),
+    requireBusinessAccess,
     dashboardRoutes(clock),
   );
   app.use(notFound);

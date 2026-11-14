@@ -9,7 +9,7 @@
   "tags": [
     {
       "name": "Authentication",
-      "description": "Login, profile and current-session revocation"
+      "description": "Existing JWT/session authentication. Admin retains all operations; demo may read business data and use login/profile/logout. Roles come from the database on every request; Login cannot assign them. Legacy accounts need an explicit reviewed role migration."
     },
     {
       "name": "Dashboard",
@@ -84,7 +84,8 @@
                     "user": {
                       "id": "000000000000000000000001",
                       "name": "Example administrator",
-                      "email": "admin@example.test"
+                      "email": "admin@example.test",
+                      "role": "admin"
                     }
                   }
                 }
@@ -133,7 +134,7 @@
             }
           },
           "403": {
-            "description": "Origin not allowed",
+            "description": "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
             "content": {
               "application/json": {
                 "schema": {
@@ -273,7 +274,7 @@
             }
           },
           "403": {
-            "description": "Origin not allowed",
+            "description": "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
             "content": {
               "application/json": {
                 "schema": {
@@ -391,7 +392,8 @@
                   "data": {
                     "id": "000000000000000000000001",
                     "name": "Example administrator",
-                    "email": "admin@example.test"
+                    "email": "admin@example.test",
+                    "role": "admin"
                   }
                 }
               }
@@ -439,7 +441,7 @@
             }
           },
           "403": {
-            "description": "Origin not allowed",
+            "description": "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
             "content": {
               "application/json": {
                 "schema": {
@@ -558,7 +560,8 @@
                     "user": {
                       "id": "000000000000000000000001",
                       "name": "Example administrator",
-                      "email": "admin@example.test"
+                      "email": "admin@example.test",
+                      "role": "admin"
                     },
                     "totals": {
                       "products": 60,
@@ -634,7 +637,7 @@
             }
           },
           "403": {
-            "description": "Origin not allowed",
+            "description": "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
             "content": {
               "application/json": {
                 "schema": {
@@ -894,7 +897,7 @@
             }
           },
           "403": {
-            "description": "Origin not allowed",
+            "description": "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
             "content": {
               "application/json": {
                 "schema": {
@@ -1083,7 +1086,7 @@
             }
           },
           "403": {
-            "description": "Origin not allowed",
+            "description": "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
             "content": {
               "application/json": {
                 "schema": {
@@ -1166,6 +1169,7 @@
         "tags": [
           "Products"
         ],
+        "description": "Requires admin. Demo receives HTTP 403 DEMO_READ_ONLY before domain validation or mutation.",
         "operationId": "post_api_products"
       }
     },
@@ -1285,7 +1289,7 @@
             }
           },
           "403": {
-            "description": "Origin not allowed",
+            "description": "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
             "content": {
               "application/json": {
                 "schema": {
@@ -1384,6 +1388,7 @@
         "tags": [
           "Products"
         ],
+        "description": "Requires admin. Demo receives HTTP 403 DEMO_READ_ONLY before domain validation or mutation.",
         "operationId": "put_api_products_productId"
       },
       "delete": {
@@ -1450,7 +1455,7 @@
             }
           },
           "403": {
-            "description": "Origin not allowed",
+            "description": "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
             "content": {
               "application/json": {
                 "schema": {
@@ -1533,6 +1538,7 @@
         "tags": [
           "Products"
         ],
+        "description": "Requires admin. Demo receives HTTP 403 DEMO_READ_ONLY before domain validation or mutation.",
         "operationId": "delete_api_products_productId"
       }
     },
@@ -1651,7 +1657,7 @@
             }
           },
           "403": {
-            "description": "Origin not allowed",
+            "description": "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
             "content": {
               "application/json": {
                 "schema": {
@@ -1841,7 +1847,7 @@
             }
           },
           "403": {
-            "description": "Origin not allowed",
+            "description": "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
             "content": {
               "application/json": {
                 "schema": {
@@ -1924,6 +1930,7 @@
         "tags": [
           "Suppliers"
         ],
+        "description": "Requires admin. Demo receives HTTP 403 DEMO_READ_ONLY before domain validation or mutation.",
         "operationId": "post_api_suppliers"
       }
     },
@@ -2044,7 +2051,7 @@
             }
           },
           "403": {
-            "description": "Origin not allowed",
+            "description": "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
             "content": {
               "application/json": {
                 "schema": {
@@ -2143,13 +2150,14 @@
         "tags": [
           "Suppliers"
         ],
+        "description": "Requires admin. Demo receives HTTP 403 DEMO_READ_ONLY before domain validation or mutation.",
         "operationId": "put_api_suppliers_supplierId"
       }
     },
     "/api/customers": {
       "post": {
         "summary": "Create a customer with UTC registration and zero EUR spent",
-        "description": "Requires name, email, address and phone; country is optional and defaults to null. Existing text/email validation applies; duplicate email addresses are allowed. Unknown fields are rejected, including registerDate, spent and import metadata. The injected server clock supplies the current UTC registration date and creation/modification timestamps. Initial spent is exact Decimal128 zero in EUR; photo and importedAt are null and provenance is absent. Creates no login account, session, order, transaction or fabricated history. Returns the existing Customer DTO and completeness metadata. This is a production mutation when used against the production server; use an explicitly authorized isolated database for testing.",
+        "description": "Requires name, email, address and phone; country is optional and defaults to null. Existing text/email validation applies; duplicate email addresses are allowed. Unknown fields are rejected, including registerDate, spent and import metadata. The injected server clock supplies the current UTC registration date and creation/modification timestamps. Initial spent is exact Decimal128 zero in EUR; photo and importedAt are null and provenance is absent. Creates no login account, session, order, transaction or fabricated history. Returns the existing Customer DTO and completeness metadata. This is a production mutation when used against the production server; use an explicitly authorized isolated database for testing. Requires admin. Demo receives HTTP 403 DEMO_READ_ONLY before domain validation or mutation.",
         "security": [
           {
             "bearerAuth": []
@@ -2253,7 +2261,7 @@
             }
           },
           "403": {
-            "description": "Origin not allowed",
+            "description": "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
             "content": {
               "application/json": {
                 "schema": {
@@ -2477,7 +2485,7 @@
             }
           },
           "403": {
-            "description": "Origin not allowed",
+            "description": "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
             "content": {
               "application/json": {
                 "schema": {
@@ -2666,7 +2674,7 @@
             }
           },
           "403": {
-            "description": "Origin not allowed",
+            "description": "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
             "content": {
               "application/json": {
                 "schema": {
@@ -2864,7 +2872,7 @@
             }
           },
           "403": {
-            "description": "Origin not allowed",
+            "description": "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
             "content": {
               "application/json": {
                 "schema": {
@@ -2947,6 +2955,7 @@
         "tags": [
           "Customers"
         ],
+        "description": "Requires admin. Demo receives HTTP 403 DEMO_READ_ONLY before domain validation or mutation.",
         "operationId": "patch_api_customers_customerId"
       }
     },
@@ -3097,7 +3106,7 @@
             }
           },
           "403": {
-            "description": "Origin not allowed",
+            "description": "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
             "content": {
               "application/json": {
                 "schema": {
@@ -3330,12 +3339,28 @@
             "type": "string",
             "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
             "description": "Validated by the API's email pattern without trimming. The generic JSON Schema email format is not an additional constraint because its accepted values differ from that pattern."
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "admin",
+                  "demo"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Server-owned role. Null identifies an unmigrated or unconfigured account, which has no business access; authentication/profile/logout remain available."
           }
         },
         "required": [
           "id",
           "name",
-          "email"
+          "email",
+          "role"
         ],
         "additionalProperties": false
       },

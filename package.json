@@ -23,6 +23,8 @@
     "seed:demo": "node --env-file-if-exists=.env --import tsx src/scripts/seed-demo.ts",
     "demo:generate": "node scripts/generate-demo.mjs",
     "user:init": "node --env-file-if-exists=.env --import tsx src/scripts/init-user.ts",
+    "user:init-demo": "node --env-file-if-exists=.env --import tsx src/scripts/init-demo-user.ts",
+    "user:admin-role": "node --env-file-if-exists=.env --import tsx src/scripts/assign-admin-role.ts",
     "check": "npm run typecheck && npm run lint && npm test && npm run build",
     "docs": "tsx src/scripts/openapi.ts"
   },

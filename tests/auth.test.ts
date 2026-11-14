@@ -63,6 +63,7 @@ describe("authentication", () => {
       "email",
       "id",
       "name",
+      "role",
     ]);
     const session = await Session.findOne();
     expect(session!.expiresAt.getTime() - session!.createdAt.getTime()).toBe(

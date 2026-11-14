@@ -106,7 +106,7 @@ const schemas: Record<string, Schema> = {
     timeZone: { const: "UTC" },
   }),
   Periods: object({ last30Days: ref("Period"), today: ref("Period") }),
-  User: object({ id, name: string, email }),
+  User: object({ id, name: string, email, role: { ...nullable({ type: "string", enum: ["admin", "demo"] }), description: "Server-owned role. Null identifies an unmigrated or unconfigured account, which has no business access; authentication/profile/logout remain available." } }),
   Login: object({
     email,
     password: { ...string, minLength: 1 },
@@ -281,7 +281,7 @@ const errors = Object.fromEntries(
         {
           400: "Invalid request",
           401: "Invalid credentials or authentication",
-          403: "Origin not allowed",
+          403: "ORIGIN_NOT_ALLOWED for rejected CORS origins; DEMO_READ_ONLY for demo business mutations; ROLE_NOT_CONFIGURED for business access without an assigned supported role",
           404: "Resource not found",
           413: "JSON body exceeds the unchanged 100 KB parser limit (after decompression when applicable)",
           415: "Unsupported request charset or Content-Encoding",
@@ -344,7 +344,7 @@ export const openapi = {
   openapi: "3.1.0",
   servers: [{ url: "/", description: "Current API server" }],
   tags: [
-    { name: "Authentication", description: "Login, profile and current-session revocation" },
+    { name: "Authentication", description: "Existing JWT/session authentication. Admin retains all operations; demo may read business data and use login/profile/logout. Roles come from the database on every request; Login cannot assign them. Legacy accounts need an explicit reviewed role migration." },
     { name: "Dashboard", description: "Current counters and explicit historical completeness" },
     { name: "Products", description: "Catalog, approved categories and logical deletion" },
     { name: "Suppliers", description: "Supplier records, EUR and preserved legacy BDT" },
@@ -524,7 +524,7 @@ Object.assign(openapi.paths["/api/suppliers/{supplierId}"].put.responses, {
 });
 
 // Illustrative fixtures only. No production records, credentials or real JWTs.
-const exampleUser = { id: "000000000000000000000001", name: "Example administrator", email: "admin@example.test" };
+const exampleUser = { id: "000000000000000000000001", name: "Example administrator", email: "admin@example.test", role: "admin" };
 const exampleProductInput = { name: "Example product", category: "Medicine", stock: 7, suppliers: "Example supplier", price: "12.34" };
 const exampleProduct = { id: "000000000000000000000002", legacyId: null, photo: null, ...exampleProductInput, currency: "EUR", createdAt: null, updatedAt: null };
 const exampleSupplierInput = { name: "Example supplier", address: "Example address", company: "Example company", deliveryDate: "2030-01-01", amount: "10.50", status: "Active" };
@@ -560,6 +560,7 @@ const successExamples: Record<string, unknown> = {
 const moduleTags: Record<string, string> = { user: "Authentication", dashboard: "Dashboard", products: "Products", suppliers: "Suppliers", customers: "Customers", orders: "Orders" };
 const exampleErrorCodes: Record<string, string> = { "400": "VALIDATION_ERROR", "401": "UNAUTHORIZED", "403": "ORIGIN_NOT_ALLOWED", "404": "NOT_FOUND", "409": "CONCURRENT_CHANGE", "413": "PAYLOAD_TOO_LARGE", "415": "UNSUPPORTED_MEDIA_TYPE", "500": "INTERNAL_ERROR" };
 interface DocumentedOperation {
+  description?: string;
   tags?: string[];
   operationId?: string;
   requestBody?: { content: Record<string, { schema: Schema; example?: unknown }> };
@@ -569,6 +570,8 @@ for (const [path, methods] of Object.entries(openapi.paths)) {
   for (const [method, value] of Object.entries(methods)) {
     const documented = value as unknown as DocumentedOperation;
     documented.tags = [moduleTags[path.split("/")[2]]];
+    const businessMutation = !path.startsWith("/api/user/") && method !== "get";
+    if (businessMutation) documented.description = `${documented.description ?? ""} Requires admin. Demo receives HTTP 403 DEMO_READ_ONLY before domain validation or mutation.`.trim();
     documented.operationId = `${method}_${path.replace(/[^a-zA-Z0-9]+/g, "_").replace(/^_|_$/g, "")}`;
     const request = documented.requestBody?.content["application/json"];
     if (request && typeof request.schema.$ref === "string") request.example = requestExamples[request.schema.$ref.split("/").at(-1)!];
@@ -576,7 +579,7 @@ for (const [path, methods] of Object.entries(openapi.paths)) {
       const json = response.content?.["application/json"];
       if (!json) continue;
       if (Number(status) >= 400) {
-        json.example = { error: { code: exampleErrorCodes[status], message: "Illustrative error response" } };
+        json.example = { error: { code: status === "403" && businessMutation ? "DEMO_READ_ONLY" : exampleErrorCodes[status], message: "Illustrative error response" } };
       } else {
         json.example = { data: successExamples[`${method.toUpperCase()} ${path}`] };
       }

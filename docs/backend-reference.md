@@ -1,6 +1,12 @@
 # Backend technical reference
 
-Authenticated Express 5 API using TypeScript, Node.js 26 LTS, MongoDB and Mongoose. This repository contains the administrative backend; no frontend implementation is included.
+Authenticated Express 5 API using TypeScript, Node.js 26 LTS, MongoDB and Mongoose. This standalone backend and the completed responsive [frontend](https://github.com/AvalianY/admin_dashboard_front) form one E-Pharmacy project; their installation procedures remain separate.
+
+## Server-owned roles
+
+The User DTO now includes `role: "admin" | "demo" | null`. New private administrative initialization explicitly assigns admin; there is no default role for legacy documents. Existing JWTs and sessions remain valid. Every business request checks the current database role: admin retains all operations, demo may read and receives `403 DEMO_READ_ONLY` for the seven mutations, and unconfigured accounts receive `403 ROLE_NOT_CONFIGURED` for business access. Login/profile/logout remain available for recovery. These errors are distinct from CORS `ORIGIN_NOT_ALLOWED`. Login cannot set a role, and no new public endpoints exist.
+
+Follow the [demo rollout runbook](demo-access.md) for the exact-identity admin migration, Windows Credential Manager provisioning and public-data/deployment gates. Production inspection found one legacy administrator; migration and demo creation are not startup actions. Publish source first, separately authorize the narrowly scoped administrator migration before the protected server deployment, then provision/verify demo privately before public distribution. The frontend's disabled controls supplement server enforcement. The original 190 documents stay untouched.
 
 ## Local setup
 

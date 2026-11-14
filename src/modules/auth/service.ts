@@ -4,7 +4,13 @@ import { Types } from "mongoose";
 import type { RequestHandler } from "express";
 import { z } from "zod";
 import { ApiError } from "../../shared/errors.js";
-import { User, Session, type UserRecord } from "./models.js";
+import {
+  User,
+  Session,
+  userRoles,
+  type UserRecord,
+  type UserRole,
+} from "./models.js";
 import { hashPassword, verifyPassword } from "./password.js";
 
 export const loginSchema = z.strictObject({
@@ -15,6 +21,7 @@ export const userDto = (user: UserRecord) => ({
   id: user._id.toString(),
   name: user.name,
   email: user.email,
+  role: userRoles.includes(user.role as UserRole) ? user.role : null,
 });
 const tokenHash = (token: string) =>
   createHash("sha256").update(token).digest("hex");
@@ -26,10 +33,12 @@ export async function initializeUser(
   name: string,
   email: string,
   password: string,
+  role: UserRole = "admin",
 ) {
   z.string().trim().min(1).parse(name);
   z.email().parse(email);
   z.string().min(1).parse(password);
+  z.enum(userRoles).parse(role);
   const normalizedEmail = email.toLowerCase();
   await User.init();
   if (await User.exists({ email: normalizedEmail }))
@@ -39,10 +48,29 @@ export async function initializeUser(
   return User.create({
     name: name.trim(),
     email: normalizedEmail,
+    role,
     passwordHash: await hashPassword(password),
     createdAt: new Date(),
   });
 }
+
+// Role is read from MongoDB on every authenticated request, never trusted from JWT/body.
+export const requireBusinessAccess: RequestHandler = (req, res, next) => {
+  const role = (res.locals.user as UserRecord).role;
+  if (role !== "admin" && role !== "demo")
+    throw new ApiError(
+      403,
+      "ROLE_NOT_CONFIGURED",
+      "Business access is not configured for this account",
+    );
+  if (role === "demo" && !["GET", "HEAD", "OPTIONS"].includes(req.method))
+    throw new ApiError(
+      403,
+      "DEMO_READ_ONLY",
+      "Demo accounts have read-only access",
+    );
+  next();
+};
 
 export async function login(
   email: string,
