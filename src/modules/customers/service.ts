@@ -12,6 +12,7 @@ import {
 import { completeness } from "../../shared/completeness.js";
 import { literalFilter, nameQuery, text } from "../../shared/validation.js";
 import { ApiError } from "../../shared/errors.js";
+import { decimal } from "../../shared/money.js";
 
 const positiveInteger = z
   .string()
@@ -23,18 +24,44 @@ export const customerQuery = z.strictObject({
   page: positiveInteger.default(1),
   limit: positiveInteger.pipe(z.number().max(100)).default(20),
 });
+const customerFields = {
+  name: text,
+  email: z.email(),
+  address: text,
+  phone: text,
+  country: text.nullable(),
+};
+export const customerCreate = z.strictObject({
+  ...customerFields,
+  country: customerFields.country.default(null),
+});
 export const customerPatch = z
-  .strictObject({
-    name: text.optional(),
-    email: z.email().optional(),
-    address: text.optional(),
-    phone: text.optional(),
-    country: text.nullable().optional(),
-  })
+  .strictObject(customerFields)
+  .partial()
   .refine(
     (value) => Object.keys(value).length > 0,
     "At least one editable field is required",
   );
+
+export async function createCustomer(
+  input: z.infer<typeof customerCreate>,
+  now: Date,
+) {
+  const customer = await Customer.create({
+    ...input,
+    registerDate: now.toISOString().slice(0, 10),
+    spent: decimal("0"),
+    currency: "EUR",
+    photo: null,
+    createdAt: now,
+    updatedAt: now,
+    importedAt: null,
+  });
+  return {
+    data: customerDto(customer),
+    meta: completeness(customerMissing(customer)),
+  };
+}
 
 export async function listCustomers(input: z.infer<typeof customerQuery>) {
   const filter = literalFilter(input.name);

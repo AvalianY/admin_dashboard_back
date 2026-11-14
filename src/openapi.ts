@@ -160,6 +160,10 @@ const schemas: Record<string, Schema> = {
     status: supplierFields.status,
     ...timestamps,
   }),
+  CustomerCreate: object(
+    { ...profileFields, country: { ...profileFields.country, default: null } },
+    ["name", "email", "address", "phone"],
+  ),
   CustomerPatch: { ...object(profileFields, []), minProperties: 1 },
   Customer: object({
     id,
@@ -302,6 +306,7 @@ function operation(
   summary: string,
   data: Schema | null,
   options: {
+    description?: string;
     body?: string;
     status?: number;
     parameters?: unknown[];
@@ -311,6 +316,7 @@ function operation(
   const status = options.status ?? 200;
   return {
     summary,
+    ...(options.description ? { description: options.description } : {}),
     security: options.public ? [] : [{ bearerAuth: [] }],
     ...(options.parameters ? { parameters: options.parameters } : {}),
     ...(options.body
@@ -342,7 +348,7 @@ export const openapi = {
     { name: "Dashboard", description: "Current counters and explicit historical completeness" },
     { name: "Products", description: "Catalog, approved categories and logical deletion" },
     { name: "Suppliers", description: "Supplier records, EUR and preserved legacy BDT" },
-    { name: "Customers", description: "Profiles and verified customer history" },
+    { name: "Customers", description: "Create customers, edit profiles and read verified customer history" },
     { name: "Orders", description: "Read-only historical order snapshots" },
   ],
   info: {
@@ -421,6 +427,15 @@ export const openapi = {
       ),
     },
     "/api/customers": {
+      post: operation(
+        "Create a customer with UTC registration and zero EUR spent",
+        ref("Customer"),
+        {
+          body: "CustomerCreate",
+          status: 201,
+          description: "Requires name, email, address and phone; country is optional and defaults to null. Existing text/email validation applies; duplicate email addresses are allowed. Unknown fields are rejected, including registerDate, spent and import metadata. The injected server clock supplies the current UTC registration date and creation/modification timestamps. Initial spent is exact Decimal128 zero in EUR; photo and importedAt are null and provenance is absent. Creates no login account, session, order, transaction or fabricated history. Returns the existing Customer DTO and completeness metadata. This is a production mutation when used against the production server; use an explicitly authorized isolated database for testing.",
+        },
+      ),
       get: operation(
         "Customers ordered by registration date descending, then identifier",
         object({ items: array(ref("Customer")) }),
@@ -515,6 +530,7 @@ const exampleProduct = { id: "000000000000000000000002", legacyId: null, photo: 
 const exampleSupplierInput = { name: "Example supplier", address: "Example address", company: "Example company", deliveryDate: "2030-01-01", amount: "10.50", status: "Active" };
 const exampleSupplier = { id: "000000000000000000000003", ...exampleSupplierInput, currency: "EUR", legacyMoney: null, createdAt: null, updatedAt: null };
 const exampleCustomer = { id: "000000000000000000000004", name: "Example customer", email: "customer@example.test", address: "Example address", phone: "TEST-PHONE", country: null, photo: null, registerDate: "2030-01-01", spent: "0.00", currency: "EUR", createdAt: null, updatedAt: null };
+const exampleCustomerInput = { name: "Example customer", email: "customer@example.test", address: "Example address", phone: "TEST-PHONE", country: "Example country" };
 const exampleOrder = { id: "000000000000000000000005", name: "Example customer", photo: null, address: "Example address", productUnits: 1, price: "12.34", currency: "EUR", status: orderStatuses[0], orderDate: null, customerId: null, items: null, createdAt: null, updatedAt: null };
 const requestExamples: Record<string, unknown> = {
   Login: { email: "admin@example.test", password: "enter-your-own-password" },
@@ -522,6 +538,7 @@ const requestExamples: Record<string, unknown> = {
   ProductUpdate: exampleProductInput,
   SupplierCreate: exampleSupplierInput,
   SupplierUpdate: exampleSupplierInput,
+  CustomerCreate: exampleCustomerInput,
   CustomerPatch: { name: "Updated example customer", country: "Example country" },
 };
 const successExamples: Record<string, unknown> = {
@@ -534,6 +551,7 @@ const successExamples: Record<string, unknown> = {
   "POST /api/suppliers": { ...exampleSupplier, createdAt: "2030-01-01T00:00:00.000Z", updatedAt: "2030-01-01T00:00:00.000Z" },
   "PUT /api/suppliers/{supplierId}": { ...exampleSupplier, updatedAt: "2030-01-01T00:00:00.000Z" },
   "GET /api/customers": { items: [exampleCustomer] },
+  "POST /api/customers": { ...exampleCustomer, ...exampleCustomerInput, spent: "0", createdAt: "2030-01-01T00:00:00.000Z", updatedAt: "2030-01-01T00:00:00.000Z" },
   "GET /api/customers/{customerId}": { customer: exampleCustomer, history: null },
   "PATCH /api/customers/{customerId}": exampleCustomer,
   "GET /api/orders": { items: [exampleOrder] },

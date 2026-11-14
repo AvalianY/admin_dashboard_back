@@ -64,13 +64,13 @@ function validateBody(
 }
 
 describe("integration acceptance", () => {
-  it("validates OpenAPI and the complete set of 15 approved operations", async () => {
+  it("validates OpenAPI and the complete set of 16 approved operations", async () => {
     await expect(
       SwaggerParser.validate(JSON.parse(JSON.stringify(openapi))),
     ).resolves.toBeDefined();
     expect(
       Object.values(openapi.paths).flatMap((path) => Object.keys(path)),
-    ).toHaveLength(15);
+    ).toHaveLength(16);
     const generated = JSON.parse(await readFile("docs/openapi.json", "utf8"));
     expect(generated).toEqual(JSON.parse(JSON.stringify(openapi)));
   });
@@ -95,6 +95,15 @@ describe("integration acceptance", () => {
       expect(response.status).toBe(200);
       validateBody(path, "get", 200, response.body);
     }
+    const createdCustomer = await request(app).post("/api/customers")
+      .auth(token, { type: "bearer" })
+      .send({ name: "Contract customer", email: "new-customer@example.test", address: "Contract address", phone: "TEST-PHONE" });
+    expect(createdCustomer.status).toBe(201);
+    validateBody("/api/customers", "post", 201, createdCustomer.body);
+    const invalidCustomer = await request(app).post("/api/customers")
+      .auth(token, { type: "bearer" }).send({ name: "Incomplete customer" });
+    expect(invalidCustomer.status).toBe(400);
+    validateBody("/api/customers", "post", 400, invalidCustomer.body);
     const customer = (await Customer.findOne())!;
     const details = await request(app)
       .get(`/api/customers/${customer.id}`)
@@ -304,6 +313,27 @@ describe("integration acceptance", () => {
       });
       expect(preflight.status).toBe(204);
       expect(preflight.headers.get("access-control-allow-origin")).toBe(origin);
+      const login = await fetch(`${origin}/api/user/login`, {
+        method: "POST",
+        headers: { Origin: origin, "Content-Type": "application/json" },
+        body: JSON.stringify({ email: "contract@example.test", password: "isolated password" }),
+      });
+      expect(login.status).toBe(200);
+      const accessToken = (await login.json()).data.accessToken;
+      const created = await fetch(`${origin}/api/customers`, {
+        method: "POST",
+        headers: { Origin: origin, "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
+        body: JSON.stringify({ name: "Compiled customer", email: "compiled@example.test", address: "Test address", phone: "TEST-PHONE", country: null }),
+      });
+      expect(created.status).toBe(201);
+      expect(created.headers.get("access-control-allow-origin")).toBe(origin);
+      const body = await created.json();
+      validateBody("/api/customers", "post", 201, body);
+      expect(body.data.spent).toBe("0");
+      expect(body.data.registerDate).toBe(body.data.createdAt.slice(0, 10));
+      expect((await fetch(`${origin}/api/customers`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: "{}",
+      })).status).toBe(401);
     } finally {
       child.kill();
       await exited;

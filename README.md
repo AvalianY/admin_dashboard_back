@@ -49,7 +49,7 @@ Das Repository enthält die Backend-Implementierung mit modularer Express-Archit
 - JWT-Login mit unabhängigen, einstündigen serverseitigen Sessions und gezieltem Logout
 - Produktkatalog mit Erstellung, vollständiger Bearbeitung und logischem Löschen
 - Lieferantenverwaltung mit EUR-Beträgen und unveränderter historischer BDT-Information
-- Kundenlisten mit Pagination, Profilbearbeitung per PATCH und bestätigter Kundenhistorie
+- Kundenerstellung, Listen mit Pagination, Profilbearbeitung per PATCH und bestätigte Kundenhistorie
 - Lesezugriff auf historische Bestellungen und unveränderte Auftragssnapshots
 - Dashboard mit Gesamtzählern, getrennten 30-Tage-Werten, fünf letzten Registrierungen und Tagesfinanzen
 - Literale Namenssuche; Sortierung für Produkte und Bestellungen; Pagination für Kunden
@@ -90,13 +90,16 @@ Das Repository enthält die Backend-Implementierung mit modularer Express-Archit
 | POST | `/api/suppliers` | Lieferant erstellen | Ja |
 | PUT | `/api/suppliers/{supplierId}` | Lieferant vollständig bearbeiten | Ja |
 | GET | `/api/customers` | Kunden suchen und seitenweise lesen | Ja |
+| POST | `/api/customers` | Kunden mit serverseitiger Registrierung und 0 EUR Ausgaben erstellen | Ja |
 | GET | `/api/customers/{customerId}` | Kundenprofil und bestätigte Historie lesen | Ja |
 | PATCH | `/api/customers/{customerId}` | Erlaubte Profilfelder teilweise bearbeiten | Ja |
 | GET | `/api/orders` | Bestellungen suchen und sortieren | Ja |
 
 Erfolgreiche Antworten verwenden `{ data, meta? }`, Fehler `{ error: { code, message, details? } }`. Erstellung liefert 201, Logout und Löschung 204 ohne Body. Geschützte Operationen erwarten `Authorization: Bearer <token>`; 401 enthält eine Bearer-Challenge. PUT benötigt alle editierbaren Felder, PATCH nur die angegebenen erlaubten Profilfelder.
 
-Die vollständigen Parameter, Schemas und Statuscodes stehen im [OpenAPI-Vertrag](docs/openapi.json). Swagger-Routen dokumentieren diese **15 Geschäftsoperationen** und sind keine zusätzlichen Geschäftsoperationen.
+`POST /api/customers` benötigt `name`, `email`, `address` und `phone`; `country` ist optional (String oder null, Standard null). Es gelten die bestehenden Text-/E-Mail-Regeln; doppelte E-Mail-Adressen bleiben erlaubt. Der Server setzt das aktuelle UTC-Registrierungsdatum, Erstellungs-/Änderungszeitpunkte und exakt 0 EUR als Decimal128-Ausgangswert für `spent`. Foto und Importzeit sind null, Import-Provenance fehlt; es werden weder ein Anmeldekonto noch eine Kaufhistorie erzeugt. Unbekannte Felder, einschließlich clientseitiger Finanz-, Datums- und technischer Angaben, werden abgewiesen.
+
+Die vollständigen Parameter, Schemas und Statuscodes stehen im [OpenAPI-Vertrag](docs/openapi.json). Swagger-Routen dokumentieren diese **16 Geschäftsoperationen** und sind keine zusätzlichen Geschäftsoperationen.
 
 ## Architektur
 
@@ -224,7 +227,7 @@ Die Produktion enthält 60 Produkte, 5 Lieferanten, 88 Kunden, 25 Bestellungen u
 
 ## Swagger-Dokumentation
 
-Lokal: [http://localhost:3000/api-docs](http://localhost:3000/api-docs). Die UI zeigt alle 15 Operationen, nach Modulen gruppiert, mit Parametern, Request-/Response-Beispielen, Schemas und Statuscodes. Der JSON-Vertrag liegt unter `/api-docs/openapi.json`. Die Beispiele sind synthetisch.
+Lokal: [http://localhost:3000/api-docs](http://localhost:3000/api-docs). Die UI zeigt alle 16 Operationen, nach Modulen gruppiert, mit Parametern, Request-/Response-Beispielen, Schemas und Statuscodes. Der JSON-Vertrag liegt unter `/api-docs/openapi.json`. Die Beispiele sind synthetisch.
 
 1. Den passenden Bereich und die Operation öffnen.
 2. Über Login mit den eigenen Zugangsdaten einen Token erhalten.
@@ -234,7 +237,7 @@ Lokal: [http://localhost:3000/api-docs](http://localhost:3000/api-docs). Die UI 
 
 Tokens werden nicht über Reloads oder Browser-Sessions hinweg gespeichert. Schreiboperationen ändern die ausgewählte Datenbank und benötigen in Produktion ein ausdrücklich genehmigtes Testfenster mit Backup und Wiederherstellung. Für Browser-Requests muss der exakte API-Origin in CORS_ORIGINS erlaubt sein; JWT bleibt für alle geschützten Operationen verpflichtend.
 
-Öffentliche Swagger UI: [https://e-pharmacy-api-kz62.onrender.com/api-docs/](https://e-pharmacy-api-kz62.onrender.com/api-docs/). Die interaktive Dokumentation ist auf Render veröffentlicht und zeigt alle 15 API-Operationen mit dem bestehenden Bearer-Schema.
+Öffentliche Swagger UI: [https://e-pharmacy-api-kz62.onrender.com/api-docs/](https://e-pharmacy-api-kz62.onrender.com/api-docs/). Die interaktive Dokumentation ist mit dem bestehenden Bearer-Schema auf Render veröffentlicht. Die lokale Erweiterung zur Kundenerstellung erhöht den Vertrag auf 16 Operationen; ihre Veröffentlichung auf GitHub und Render benötigt eine separate Freigabe. Der neue POST darf noch nicht als produktiv verfügbar vorausgesetzt werden.
 
 ## Deployment
 
@@ -250,11 +253,11 @@ Ablauf, sichere Administration und Freigabegrenzen: [Deployment-Runbook](docs/fr
 
 Die öffentlichen Tests starten eigene, kurzlebige MongoDB-Instanzen und verwenden synthetische Fixtures. Sie benötigen keine privaten Originaldaten. `test:source` prüft die Originale separat und schlägt bei fehlenden Dateien fehl. Tests werden nicht gegen Atlas ausgeführt.
 
-Die Suite prüft Authentifizierung, Sessions, Kataloge, Dashboard, Import, Request-/Response-Verträge, Fehlerbehandlung und den tatsächlichen kompilierten Server. Swagger-Prüfungen decken HTML, lokale Assets, alle 15 Operationen, Beispiele, Bearer-Konfiguration, Token-Persistenz-Einstellungen und unveränderte CORS-/JWT-Grenzen ab.
+Die Suite prüft Authentifizierung, Sessions, Kataloge, Dashboard, Import, Request-/Response-Verträge, Fehlerbehandlung und den tatsächlichen kompilierten Server. Swagger-Prüfungen decken HTML, lokale Assets, alle 16 Operationen, Beispiele, Bearer-Konfiguration, Token-Persistenz-Einstellungen und unveränderte CORS-/JWT-Grenzen ab. Tests zur Kundenerstellung verwenden eine isolierte MongoDB und prüfen Validierung, UTC-Grenzen, Decimal128, Fünfer-Pagination, Profiländerungen, Dashboard und den Erhalt vorhandener Datensätze.
 
 **Live-Nachweis vom 13.11.2026:** alle 15 Geschäftsoperationen, 74 HTTPS-Requests und das exakte Wiederherstellen der 190 Originaldokumente nach temporären Teständerungen — PASS. Zusätzlich wurden zuvor 49 sichere HTTPS-Szenarien einschließlich Cold Start geprüft. Nach der Veröffentlichung liefern die öffentliche Swagger UI und das zugehörige OpenAPI-JSON-Dokument HTTP 200; die Spezifikation enthält alle 15 Operationen und das bestehende Bearer-Schema.
 
-Lokale Abschlussprüfung: TypeScript, ESLint und Production-Build erfolgreich; **149 öffentliche Tests** und **5 separate Originaldaten-Tests** bestanden. `npm audit` meldet **0 bekannte Schwachstellen**. Der Browser-Test des kompilierten Servers bestätigt alle 15 Swagger-Operationen, Bearer-Übertragung, Try it out und das Löschen der Autorisierung nach einem Reload.
+Lokale Prüfung der Kundenerweiterung bestanden: TypeScript, ESLint, Production-Build, **200 öffentliche Tests** und **5 separate Originaldaten-Tests**; `npm audit` meldet **0 bekannte Schwachstellen**. Ein separater Browser-Test des kompilierten Servers zeigt alle 16 Swagger-Operationen und prüft den neuen Request-Body, die dokumentierte 201-Antwort, Bearer-Übertragung und gelöschte Autorisierung nach einem Reload. Sein Testtoken liefert erwartungsgemäß 401 ohne Datenbankverbindung; gültige Erstellung prüfen Integrationstests gegen isolierte MongoDB. Die Production-Abnahme der neuen Operation steht noch aus. Lokale Prüfungen wiederholen:
 
 ```bash
 npm run check

@@ -34,12 +34,12 @@ describe("public Swagger documentation with unchanged API protection", () => {
     expect(result.status).toBe(200);
     expect(result.headers["content-type"]).toMatch(type as RegExp);
   });
-  it("loads the existing specification and keeps exactly fifteen business operations", async () => {
+  it("loads the existing specification and keeps exactly sixteen business operations", async () => {
     const result = await request(app).get("/api-docs/openapi.json");
     expect(result.status).toBe(200);
     expect(result.body).toEqual(openapi);
     expect(result.body).toEqual(JSON.parse(await readFile("docs/openapi.json", "utf8")));
-    expect(operations()).toHaveLength(15);
+    expect(operations()).toHaveLength(16);
     expect(operations().every(({ method }) => methodNames.has(method))).toBe(true);
     expect(Object.keys(result.body.paths).some((path) => path.startsWith("/api-docs"))).toBe(false);
     expect(result.body.servers).toEqual([{ url: "/", description: "Current API server" }]);
@@ -56,7 +56,7 @@ describe("public Swagger documentation with unchanged API protection", () => {
       expect(op.security).toEqual(path === "/api/user/login" && method === "post" ? [] : [{ bearerAuth: [] }]);
       ids.push(op.operationId);
     }
-    expect(new Set(ids).size).toBe(15);
+    expect(new Set(ids).size).toBe(16);
   });
   it("does not persist or preauthorize tokens and offers standard Try it out", async () => {
     const result = await request(app).get("/api-docs/swagger-ui-init.js");

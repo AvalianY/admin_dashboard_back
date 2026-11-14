@@ -499,6 +499,14 @@ restoration with conflict detection; never treat seed as restoration or perform
 unconditional database/collection deletion. Stop on restoration failure without
 blind destructive retries.
 
+The current local contract adds customer creation as operation 16. This extension
+requires separate Git publication and Render deployment; the completed live
+acceptance record above still refers to the previous 15-operation release.
+Test customer creation in an isolated database. Do not use production Swagger
+Try it out to create customers without a new explicit production-write approval;
+there is no customer-delete API for cleanup. No environment or infrastructure
+change is required by the endpoint itself.
+
 | Operation | Checks |
 | --- | --- |
 | POST /api/user/login | Valid credentials => 200, one-hour expiry; wrong credentials => 401 with Bearer challenge; no secrets in response/logs |
@@ -514,6 +522,7 @@ blind destructive retries.
 | POST /api/suppliers | An explicitly authorized test supplier => 201; non-negative decimal EUR; invalid date/status or null amount rejected; remember there is no delete API |
 | PUT /api/suppliers/:supplierId | In an authorized legacy test record change status/address/company while retaining amount:null and BDT; explicit EUR accepted; known-to-null rejected; all fields required; conflict response documented as 409 |
 | GET /api/customers | 88 separate customers, name search, default page 1/limit 20, maximum 100, final/empty pages and pagination metadata |
+| POST /api/customers | Isolated database only unless a new production-write authorization is granted: required name/email/address/phone; optional nullable country; strict body; UTC registration/creation timestamps; exact zero EUR spent; no import provenance or fabricated history; 201; list/search/page limit=5/GET/PATCH/Dashboard integration; missing/invalid/revoked token rejected |
 | GET /api/customers/:customerId | Profile and combined-history representation; missing verified links => history:null/partial, never invented relationships or verified empty history |
 | PATCH /api/customers/:customerId | In an authorized customer test record modify permitted profile fields; Dashboard reflects changes; spent/technical fields rejected and unsupplied fields preserved |
 

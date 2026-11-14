@@ -49,7 +49,7 @@ This repository contains a modular Express backend. A completed frontend applica
 - JWT login with independent one-hour server-side sessions and targeted logout
 - Product catalog with creation, full updates and soft deletion
 - Supplier management with EUR amounts and preserved historical BDT information
-- Paginated customer lists, PATCH profile updates and verified customer history
+- Customer creation, paginated lists, PATCH profile updates and verified customer history
 - Read-only historical orders with preserved order snapshots
 - Dashboard totals, separate 30-day statistics, five latest registrations and daily financial data
 - Literal name search; product/order sorting; customer pagination
@@ -90,13 +90,16 @@ This repository contains a modular Express backend. A completed frontend applica
 | POST | `/api/suppliers` | Create a supplier | Yes |
 | PUT | `/api/suppliers/{supplierId}` | Fully update a supplier | Yes |
 | GET | `/api/customers` | Search and paginate customers | Yes |
+| POST | `/api/customers` | Create a customer with server-owned registration and zero EUR spent | Yes |
 | GET | `/api/customers/{customerId}` | Read a customer profile and verified history | Yes |
 | PATCH | `/api/customers/{customerId}` | Partially update permitted profile fields | Yes |
 | GET | `/api/orders` | Search and sort orders | Yes |
 
 Successful responses use `{ data, meta? }`; errors use `{ error: { code, message, details? } }`. Creation returns 201; logout and deletion return 204 without a body. Protected operations require `Authorization: Bearer <token>`; 401 responses include a Bearer challenge. PUT requires every editable field; PATCH changes only the supplied permitted profile fields.
 
-The complete parameters, schemas and status codes are defined in the [OpenAPI contract](docs/openapi.json). Swagger routes document these **15 business operations** and do not add business operations.
+`POST /api/customers` requires `name`, `email`, `address` and `phone`; `country` is optional (string or null, default null). Existing text/email validation applies and duplicate emails are allowed. The server sets the current UTC registration date, creation/modification timestamps and exact Decimal128 zero EUR spent. Photo/import time are null, import provenance is absent, and no login account or purchase history is created. Unknown fields, including client-supplied financial, date and technical fields, are rejected.
+
+The complete parameters, schemas and status codes are defined in the [OpenAPI contract](docs/openapi.json). Swagger routes document these **16 business operations** and do not add business operations.
 
 ## Architecture
 
@@ -224,7 +227,7 @@ Production contains 60 products, 5 suppliers, 88 customers, 25 orders and 12 fin
 
 ## Swagger Documentation
 
-Local UI: [http://localhost:3000/api-docs](http://localhost:3000/api-docs). It displays all 15 operations grouped by module, parameters, request/response examples, schemas and HTTP status codes. The JSON document is served at `/api-docs/openapi.json`. All examples are synthetic.
+Local UI: [http://localhost:3000/api-docs](http://localhost:3000/api-docs). It displays all 16 operations grouped by module, parameters, request/response examples, schemas and HTTP status codes. The JSON document is served at `/api-docs/openapi.json`. All examples are synthetic.
 
 1. Expand the relevant module and operation.
 2. Log in with your own credentials to obtain a token.
@@ -234,7 +237,7 @@ Local UI: [http://localhost:3000/api-docs](http://localhost:3000/api-docs). It d
 
 Tokens are not persisted across reloads or browser sessions. Mutation requests change the selected database; production use requires a separately authorized test window with backup and restoration. Browser requests require the exact API origin in CORS_ORIGINS; protected operations still require JWT authentication.
 
-Public Swagger UI: [https://e-pharmacy-api-kz62.onrender.com/api-docs/](https://e-pharmacy-api-kz62.onrender.com/api-docs/). The interactive documentation is deployed on Render and lists all 15 API operations with the existing Bearer scheme.
+Public Swagger UI: [https://e-pharmacy-api-kz62.onrender.com/api-docs/](https://e-pharmacy-api-kz62.onrender.com/api-docs/). The interactive documentation is deployed on Render with the existing Bearer scheme. The local customer-creation extension brings the contract to 16 operations; publishing it to GitHub and Render requires separate approval. Do not assume that the new POST is already available on production.
 
 ## Deployment
 
@@ -250,11 +253,11 @@ Deployment procedure, secure administration and approval boundaries: [deployment
 
 Public tests start their own ephemeral MongoDB instances and use synthetic fixtures without private originals. `test:source` checks originals separately and fails rather than skipping unavailable files. Tests do not run against Atlas.
 
-The suite covers authentication, sessions, catalogs, Dashboard, import, request/response contracts, error handling and the actual compiled server. Swagger checks cover HTML, local assets, all 15 operations, examples, Bearer configuration, token-persistence settings and unchanged CORS/JWT boundaries.
+The suite covers authentication, sessions, catalogs, Dashboard, import, request/response contracts, error handling and the actual compiled server. Swagger checks cover HTML, local assets, all 16 operations, examples, Bearer configuration, token-persistence settings and unchanged CORS/JWT boundaries. Customer-creation tests use an isolated MongoDB and cover validation, UTC boundaries, Decimal128, five-row pagination, profile updates, Dashboard and preservation of existing records.
 
 **Live evidence from 2026-11-13:** all 15 business operations, 74 HTTPS requests and exact restoration of all 190 original documents after temporary test mutations — PASS. An earlier run also verified 49 safe HTTPS scenarios including a cold start. Following publication, the public Swagger UI and its OpenAPI JSON return HTTP 200; the specification includes all 15 operations and the existing Bearer scheme.
 
-Final local verification: TypeScript, ESLint and the production build passed; **149 public tests** and **5 separate original-data tests** passed. `npm audit` reports **0 known vulnerabilities**. A browser test of the compiled server confirms all 15 Swagger operations, Bearer transmission, Try it out and cleared authorization after reload.
+Local customer-creation extension checks passed: TypeScript, ESLint, production build, **200 public tests** and **5 separate original-data tests**; `npm audit` reports **0 known vulnerabilities**. A separate browser check of the compiled server renders all 16 Swagger operations and verifies the new request body, documented 201 response, Bearer transmission and cleared authorization after reload. Its dummy token returns the expected 401 without a database connection; valid creation is verified against isolated MongoDB by integration tests. Production acceptance of the new operation is still pending. Reproduce the local checks:
 
 ```bash
 npm run check

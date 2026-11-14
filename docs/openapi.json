@@ -25,7 +25,7 @@
     },
     {
       "name": "Customers",
-      "description": "Profiles and verified customer history"
+      "description": "Create customers, edit profiles and read verified customer history"
     },
     {
       "name": "Orders",
@@ -2147,6 +2147,197 @@
       }
     },
     "/api/customers": {
+      "post": {
+        "summary": "Create a customer with UTC registration and zero EUR spent",
+        "description": "Requires name, email, address and phone; country is optional and defaults to null. Existing text/email validation applies; duplicate email addresses are allowed. Unknown fields are rejected, including registerDate, spent and import metadata. The injected server clock supplies the current UTC registration date and creation/modification timestamps. Initial spent is exact Decimal128 zero in EUR; photo and importedAt are null and provenance is absent. Creates no login account, session, order, transaction or fabricated history. Returns the existing Customer DTO and completeness metadata. This is a production mutation when used against the production server; use an explicitly authorized isolated database for testing.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerCreate"
+              },
+              "example": {
+                "name": "Example customer",
+                "email": "customer@example.test",
+                "address": "Example address",
+                "phone": "TEST-PHONE",
+                "country": "Example country"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success. Null means unavailable, never a confirmed zero or empty set. Partial lists contain only confirmed records.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Customer"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "additionalProperties": false
+                },
+                "example": {
+                  "data": {
+                    "id": "000000000000000000000004",
+                    "name": "Example customer",
+                    "email": "customer@example.test",
+                    "address": "Example address",
+                    "phone": "TEST-PHONE",
+                    "country": "Example country",
+                    "photo": null,
+                    "registerDate": "2030-01-01",
+                    "spent": "0",
+                    "currency": "EUR",
+                    "createdAt": "2030-01-01T00:00:00.000Z",
+                    "updatedAt": "2030-01-01T00:00:00.000Z"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Illustrative error response"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or authentication",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNAUTHORIZED",
+                    "message": "Illustrative error response"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "WWW-Authenticate": {
+                "description": "Bearer authentication challenge without token or internal error details.",
+                "schema": {
+                  "type": "string",
+                  "const": "Bearer realm=\"e-pharmacy\""
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin not allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "ORIGIN_NOT_ALLOWED",
+                    "message": "Illustrative error response"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "NOT_FOUND",
+                    "message": "Illustrative error response"
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "JSON body exceeds the unchanged 100 KB parser limit (after decompression when applicable)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "PAYLOAD_TOO_LARGE",
+                    "message": "Illustrative error response"
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported request charset or Content-Encoding",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "UNSUPPORTED_MEDIA_TYPE",
+                    "message": "Illustrative error response"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": {
+                    "code": "INTERNAL_ERROR",
+                    "message": "Illustrative error response"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Customers"
+        ],
+        "operationId": "post_api_customers"
+      },
       "get": {
         "summary": "Customers ordered by registration date descending, then identifier",
         "security": [
@@ -3609,6 +3800,55 @@
           "status",
           "createdAt",
           "updatedAt"
+        ],
+        "additionalProperties": false
+      },
+      "CustomerCreate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "description": "On input, leading/trailing whitespace is trimmed; at least one non-whitespace character is required."
+          },
+          "email": {
+            "type": "string",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+            "description": "Validated by the API's email pattern without trimming. The generic JSON Schema email format is not an additional constraint because its accepted values differ from that pattern."
+          },
+          "address": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "description": "On input, leading/trailing whitespace is trimmed; at least one non-whitespace character is required."
+          },
+          "phone": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "description": "On input, leading/trailing whitespace is trimmed; at least one non-whitespace character is required."
+          },
+          "country": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S",
+                "description": "On input, leading/trailing whitespace is trimmed; at least one non-whitespace character is required."
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "address",
+          "phone"
         ],
         "additionalProperties": false
       },

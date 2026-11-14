@@ -66,6 +66,7 @@ const targets: Target[] = [
   { path: "/api/products/{productId}", method: "put", url: () => `/api/products/${productId}`, body: product, fields: ["name", "suppliers"], status: 200 },
   { path: "/api/suppliers", method: "post", url: () => "/api/suppliers", body: supplier, fields: ["name", "address", "company"], status: 201 },
   { path: "/api/suppliers/{supplierId}", method: "put", url: () => `/api/suppliers/${supplierId}`, body: supplier, fields: ["name", "address", "company"], status: 200 },
+  { path: "/api/customers", method: "post", url: () => "/api/customers", body: { name: "Customer", email: "new@example.test", address: "Address", phone: "TEST-PHONE" }, fields: ["name", "address", "phone", "country"], status: 201 },
   { path: "/api/customers/{customerId}", method: "patch", url: () => `/api/customers/${customerId}`, body: {}, fields: ["name", "address", "phone", "country"], status: 200 },
 ];
 
