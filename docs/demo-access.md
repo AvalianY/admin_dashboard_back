@@ -1,6 +1,8 @@
 # Read-only demo access and controlled rollout
 
-This release adds two server-owned roles without adding endpoints or replacing JWT/session authentication. Git publication is authorized; deployment and production demo provisioning are separate steps. The owner confirmed on 14 November 2026 that public viewing of the original educational v1 data is permitted. This confirmation is not a claim that names or contact details were independently proven fictional. Original JSON remain private and the 190 original domain documents must not be altered.
+This release adds two server-owned roles without adding endpoints or replacing JWT/session authentication. Production activation passed on 15 November 2026: the owner deployed the protected server and frontend, the addressed admin migration is complete, and the existing secure initializer created one production demo account. Live API and browser verification, seven read-only denials and exact BSON preservation passed. See the [production record](production-activation.md).
+
+The owner confirmed on 14 November 2026 that public viewing of the original educational v1 data is permitted. This confirmation is not a claim that names or contact details were independently proven fictional. Original JSON remain private and the 190 original domain documents must not be altered. The procedure below documents the required gates for future operators; it does not authorize repeating migrations, seed or credential resets.
 
 ## Authorization contract
 
@@ -62,7 +64,7 @@ The initializer generates 32 cryptographically random bytes, uses the existing s
 
 Secure storage must succeed before inserting the user. A database failure retains the new vault entry for manual reconciliation, rather than discarding the only password recovery material. An orphan vault target requires operator review; do not overwrite it or automatically reset an existing account. Re-running with an existing compatible demo identity returns `exists`, does not generate a replacement password and does not change its role, name, hash or sessions. An incompatible existing role fails. Non-Windows execution refuses provisioning rather than emitting a password through a weaker fallback.
 
-The owner can retrieve the demo credential privately through the existing approved local Windows credential workflow. No real password is included in Git, README, Swagger or public reports. Account creation never creates a session or modifies domain records.
+The owner can retrieve the demo credential through the existing approved local Windows credential workflow. After every live security gate passed, the owner explicitly authorized publishing this restricted demo password in the top Live Demo blocks of the six README files. This is the only approved public password destination; administrator passwords, JWT keys and MongoDB credentials remain private. Do not copy the demo password into logs, reports, Swagger, source code, hosting variables or other files. Account creation never creates a session or modifies domain records.
 
 ## Verify before distributing credentials
 
@@ -70,7 +72,7 @@ After the protected server is deployed and the private account is provisioned, l
 
 The original dataset stays untouched. `seed:demo` remains an unrelated synthetic domain-data importer for isolated development/test databases and must never be used for public-account initialization or against production e_pharmacy.
 
-Frontend release still needs actual hosting/origin and `/api` routing configuration; no live frontend URL is invented. Admin layout is unchanged. Demo uses the same Login, navigation, tables and dialogs with disabled Add/Edit/Delete controls; the backend remains the security boundary.
+The [production frontend](https://admin-dashboard-front-blush.vercel.app/) now uses the Vercel `/api` rewrite to the existing Render backend. Bearer forwarding, no-store response policies and the owner's exact CORS origin are verified live. Admin layout is unchanged. Demo uses the same Login, navigation, tables and dialogs with disabled Add/Edit/Delete controls; the backend remains the security boundary.
 
 ## Independent verification
 

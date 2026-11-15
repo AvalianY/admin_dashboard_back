@@ -21,8 +21,24 @@
 
 </div>
 
+## Live Demo
+
+**[Frontend / Live Application](https://admin-dashboard-front-blush.vercel.app/)**
+
+**Live Application:** [E-Pharmacy](https://admin-dashboard-front-blush.vercel.app/)
+
+| Feld | Wert |
+| --- | --- |
+| Demo Email | `demo@e-pharmacy.example` |
+| Demo Password | `6800gJ8TaoEeM-ykTaehM4MWqY47ikFQX8gDiQPeFjg` |
+| Role | `demo` |
+| Access | Read-only |
+
+Öffentlicher Demo-Zugang zum freigegebenen Lehrdatensatz. Das Konto darf Daten ausschließlich lesen; Erstellen, Bearbeiten und Löschen werden serverseitig blockiert. Die Zugangsdaten oben gehören ausschließlich zum Demo-Konto.
+
 ## Inhaltsverzeichnis
 
+- [Live Demo](#live-demo)
 - [Über das Projekt](#über-das-projekt)
 - [Funktionen](#funktionen)
 - [Technologien](#technologien)
@@ -45,7 +61,7 @@
 Dieses Repository enthält das eigenständige modulare Express-Backend. Die fertige responsive [Frontend-Anwendung](https://github.com/AvalianY/admin_dashboard_front) ist die zweite Komponente desselben E-Pharmacy-Projekts. Der veröffentlichte Server verwendet den freigegebenen ursprünglichen Lehrdatensatz mit **190 Domänendokumenten**.
 
 
-Die Rollen `admin` und `demo` werden serverseitig geprüft. Demo erlaubt Geschäfts-GETs sowie Login/Profil/Logout; alle sieben Geschäftsänderungen liefern `403 DEMO_READ_ONLY`. Ein Konto ohne zugewiesene Rolle erhält keine Geschäftsrechte. Die neue Absicherung ist vor öffentlichem Demo-Zugang gesondert auszurollen und zu prüfen; Zugangsdaten werden nicht veröffentlicht. [Migration und sichere Initialisierung](docs/demo-access.md).
+Die Rollen `admin` und `demo` werden serverseitig geprüft. Der öffentliche Demo-Zugang ist aktiv und verwendet das normale Login; alle sieben Geschäftsänderungen liefern `403 DEMO_READ_ONLY`. Ein Konto ohne konfigurierte Rolle erhält keine Geschäftsrechte. Nur die ausdrücklich freigegebenen Demo-Zugangsdaten stehen oben; administrative Passwörter und JWT-Schlüssel bleiben privat. [Production-Prüfung](docs/production-activation.md) · [Sichere Initialisierung](docs/demo-access.md).
 ## Funktionen
 
 - JWT-Login mit unabhängigen, einstündigen serverseitigen Sessions und gezieltem Logout
@@ -245,13 +261,11 @@ Tokens werden nicht über Reloads oder Browser-Sessions hinweg gespeichert. Schr
 
 ## Deployment
 
-Die bestehende API läuft unter [https://e-pharmacy-api-kz62.onrender.com](https://e-pharmacy-api-kz62.onrender.com) auf **Render Free in Frankfurt**, mit **MongoDB Atlas Free auf AWS Frankfurt**. Der Root-Pfad darf 404 liefern; die Geschäftsoperationen sind geschützt.
+Die [Live-API](https://e-pharmacy-api-kz62.onrender.com) läuft auf Render Free in Frankfurt mit MongoDB Atlas Free auf AWS Frankfurt. Das [Frontend / Live Application](https://admin-dashboard-front-blush.vercel.app/) läuft auf Vercel Free. Der Root-Pfad der API darf 404 liefern; Geschäftsoperationen benötigen weiterhin gültige JWT/Sessions.
 
-`render.yaml` legt Node 26.13.0, `npm ci --include=dev && npm run build`, `npm start` und deaktivierte automatische Deploys fest. Der Server bindet nach erfolgreicher DB-Verbindung an `0.0.0.0` und den zugewiesenen PORT. Zugangsdaten werden in privaten Environment Settings hinterlegt; Init und Import gehören nicht in Build-/Start-Hooks.
+`render.yaml` enthält Node 26.13.0, `npm ci --include=dev && npm run build`, `npm start` und ausgeschaltetes Auto-Deploy. Der Eigentümer hat das zusätzliche tatsächliche Frontend-Origin in den Render Environment Settings freigegeben; bestätigt sind `https://e-pharmacy-api-kz62.onrender.com` und `https://admin-dashboard-front-blush.vercel.app`. Die YAML enthält weiterhin den ursprünglichen API-Origin als Basiswert; bei manueller Konfiguration muss das bestätigte Frontend-Origin erhalten bleiben. Zugangsdaten, Initialisierung und Import gehören nicht in Build-/Start-Hooks.
 
-Render Free fährt Dienste nach Inaktivität herunter; der nächste Request kann einen Cold Start auslösen. Daten und Sessions bleiben in Atlas. Das lokale Dateisystem ist nicht dauerhaft. [Free-Limits](https://render.com/docs/free). `render.yaml` erlaubt ausschließlich `https://e-pharmacy-api-kz62.onrender.com` als Production-Origin für Swagger. Die tatsächlichen Render Environment Settings müssen mit dieser Konfiguration übereinstimmen: Eine lokale YAML-Änderung aktualisiert einen bestehenden Service nicht automatisch. Der Frontend-Origin wird erst nach seiner Freigabe ergänzt.
-
-Ablauf, sichere Administration und Freigabegrenzen: [Deployment-Runbook](docs/free-deployment.md). Neue Veröffentlichungsschritte sind separat zu genehmigen.
+Render Free kann nach Inaktivität einen Cold Start benötigen; Daten und Sessions verbleiben in Atlas. [Free-Limits](https://render.com/docs/free) · [Deployment-Runbook](docs/free-deployment.md) · [Production-Prüfung](docs/production-activation.md).
 
 ## Tests und Qualität
 
@@ -261,13 +275,15 @@ Die Suite prüft Authentifizierung, Sessions, Kataloge, Dashboard, Import, Reque
 
 **Live-Nachweis vom 13.11.2026:** alle 15 Geschäftsoperationen, 74 HTTPS-Requests und das exakte Wiederherstellen der 190 Originaldokumente nach temporären Teständerungen — PASS. Zusätzlich wurden zuvor 49 sichere HTTPS-Szenarien einschließlich Cold Start geprüft. Nach der Veröffentlichung liefern die öffentliche Swagger UI und das zugehörige OpenAPI-JSON-Dokument HTTP 200; die aktuelle Spezifikation enthält 16 Operationen und das bestehende Bearer-Schema.
 
-Aktuelle lokale Rollen-/Kundenprüfungen bestanden: TypeScript, ESLint, Production-Build, **220 öffentliche Tests** und **5 separate Originaldaten-Tests**; `npm audit` meldet **0 bekannte Schwachstellen**. Ein separater Browser-Test des kompilierten Servers zeigt alle 16 Swagger-Operationen und prüft den neuen Request-Body, die dokumentierte 201-Antwort, Bearer-Übertragung und gelöschte Autorisierung nach einem Reload. Sein Testtoken liefert erwartungsgemäß 401 ohne Datenbankverbindung; gültige Erstellung prüfen Integrationstests gegen isolierte MongoDB. Die Production-Abnahme der neuen Operation steht noch aus. Lokale Prüfungen wiederholen:
+Aktuelle lokale Rollen-/Kundenprüfungen bestanden: TypeScript, ESLint, Production-Build, **220 öffentliche Tests** und **5 separate Originaldaten-Tests**; `npm audit` meldet **0 bekannte Schwachstellen**. Ein separater Browser-Test des kompilierten Servers zeigt alle 16 Swagger-Operationen und prüft den neuen Request-Body, die dokumentierte 201-Antwort, Bearer-Übertragung und gelöschte Autorisierung nach einem Reload. Sein Testtoken liefert erwartungsgemäß 401 ohne Datenbankverbindung; gültige Erstellung prüfen Integrationstests gegen isolierte MongoDB. Gültige administrative Erstellung wird in isolierten Integrationstests geprüft; diese Aktivierung umfasst ausschließlich lesenden Production-Zugriff und sichere Schreibverweigerungen. Lokale Prüfungen wiederholen:
 
 ```bash
 npm run check
 npm run test:source
 npm audit
 ```
+
+**Production-Prüfung vom 15.11.2026:** Administrator- und Demo-Login, alle erlaubten GETs, Vercel-Proxy/Bearer/no-store, sieben sichere `403 DEMO_READ_ONLY`-Prüfungen, JWT-/Header-/Query-/Frontend-Rollenschutz, Sessions/Logout und die echte Oberfläche auf Mobile/Tablet/Desktop — PASS. Alle 190 Originaldokumente bleiben BSON-identisch. Gültige administrative Schreiboperationen wurden dabei nicht gegen Production ausgeführt. [Prüfungsumfang](docs/production-activation.md).
 
 ## Autor
 

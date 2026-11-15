@@ -21,8 +21,24 @@
 
 </div>
 
+## Live Demo
+
+**[Frontend / Live Application](https://admin-dashboard-front-blush.vercel.app/)**
+
+**Live Application:** [E-Pharmacy](https://admin-dashboard-front-blush.vercel.app/)
+
+| Field | Value |
+| --- | --- |
+| Demo Email | `demo@e-pharmacy.example` |
+| Demo Password | `6800gJ8TaoEeM-ykTaehM4MWqY47ikFQX8gDiQPeFjg` |
+| Role | `demo` |
+| Access | Read-only |
+
+Public demo access to the approved educational dataset. This account can only read data; the server blocks creation, editing and deletion. The credentials above belong exclusively to the demo account.
+
 ## Table of Contents
 
+- [Live Demo](#live-demo)
 - [About the Project](#about-the-project)
 - [Features](#features)
 - [Technologies](#technologies)
@@ -45,7 +61,7 @@
 This repository contains the standalone modular Express backend. The completed responsive [frontend application](https://github.com/AvalianY/admin_dashboard_front) is the second part of the same E-Pharmacy project. The deployed server uses the approved original educational dataset of **190 domain documents**.
 
 
-The server enforces `admin` and `demo` roles. Demo allows business GETs plus Login/profile/Logout; all seven business mutations return `403 DEMO_READ_ONLY`. Unassigned roles receive no business access. Separately deploy and verify the protection before public demo access; credentials are not published. [Migration and secure provisioning](docs/demo-access.md).
+The server enforces `admin` and `demo` roles. Public demo access is active through normal Login; all seven business mutations return `403 DEMO_READ_ONLY`. An unconfigured role has no business access. Only the explicitly approved demo credentials are published above; administrator passwords and JWT keys remain private. [Production verification](docs/production-activation.md) · [Secure provisioning](docs/demo-access.md).
 ## Features
 
 - JWT login with independent one-hour server-side sessions and targeted logout
@@ -245,13 +261,11 @@ Public Swagger UI: [https://e-pharmacy-api-kz62.onrender.com/api-docs/](https://
 
 ## Deployment
 
-The existing API is live at [https://e-pharmacy-api-kz62.onrender.com](https://e-pharmacy-api-kz62.onrender.com) on **Render Free in Frankfurt**, using **MongoDB Atlas Free on AWS Frankfurt**. The root path may return 404; business operations are protected.
+The [live API](https://e-pharmacy-api-kz62.onrender.com) runs on Render Free in Frankfurt with MongoDB Atlas Free on AWS Frankfurt. The [Frontend / Live Application](https://admin-dashboard-front-blush.vercel.app/) runs on Vercel Free. The API root may return 404; business operations still require valid JWT/sessions.
 
-`render.yaml` pins Node 26.13.0, `npm ci --include=dev && npm run build`, `npm start` and disabled automatic deployments. After connecting to MongoDB, the server binds to `0.0.0.0` on the assigned PORT. Credentials belong in private environment settings; initialization and imports are not build/start hooks.
+`render.yaml` specifies Node 26.13.0, `npm ci --include=dev && npm run build`, `npm start` and disabled Auto-Deploy. The owner added the actual frontend origin in Render Environment Settings; confirmed origins are `https://e-pharmacy-api-kz62.onrender.com` and `https://admin-dashboard-front-blush.vercel.app`. YAML retains the original API origin as its baseline; preserve the confirmed frontend origin during manual configuration. Credentials, initialization and imports do not belong in build/start hooks.
 
-Render Free spins down idle services, so the next request may trigger a cold start. Durable data and sessions remain in Atlas; the service filesystem is ephemeral. [Free limits](https://render.com/docs/free). `render.yaml` allows only `https://e-pharmacy-api-kz62.onrender.com` as the production origin for Swagger. The actual Render Environment Settings must match this configuration: changing the local YAML does not automatically update an existing service. The frontend origin will be added only after approval.
-
-Deployment procedure, secure administration and approval boundaries: [deployment runbook](docs/free-deployment.md). Further publication steps require separate approval.
+Render Free may need a cold start after inactivity; data and sessions remain in Atlas. [Free limits](https://render.com/docs/free) · [Deployment runbook](docs/free-deployment.md) · [Production verification](docs/production-activation.md).
 
 ## Testing and Quality
 
@@ -261,13 +275,15 @@ The suite covers authentication, sessions, catalogs, Dashboard, import, request/
 
 **Live evidence from 2026-11-13:** all 15 business operations, 74 HTTPS requests and exact restoration of all 190 original documents after temporary test mutations — PASS. An earlier run also verified 49 safe HTTPS scenarios including a cold start. Following publication, the public Swagger UI and its OpenAPI JSON return HTTP 200; the current specification includes 16 operations and the existing Bearer scheme.
 
-Current local role/customer checks passed: TypeScript, ESLint, production build, **220 public tests** and **5 separate original-data tests**; `npm audit` reports **0 known vulnerabilities**. A separate browser check of the compiled server renders all 16 Swagger operations and verifies the new request body, documented 201 response, Bearer transmission and cleared authorization after reload. Its dummy token returns the expected 401 without a database connection; valid creation is verified against isolated MongoDB by integration tests. Production acceptance of the new operation is still pending. Reproduce the local checks:
+Current local role/customer checks passed: TypeScript, ESLint, production build, **220 public tests** and **5 separate original-data tests**; `npm audit` reports **0 known vulnerabilities**. A separate browser check of the compiled server renders all 16 Swagger operations and verifies the new request body, documented 201 response, Bearer transmission and cleared authorization after reload. Its dummy token returns the expected 401 without a database connection; valid creation is verified against isolated MongoDB by integration tests. Valid administrative creation remains covered by isolated integration tests; this activation exercised only read-only production access and safe write-denial probes. Reproduce the local checks:
 
 ```bash
 npm run check
 npm run test:source
 npm audit
 ```
+
+**Production verification, 15 November 2026:** admin/demo Login, every allowed GET, Vercel proxy/Bearer/no-store, seven safe `403 DEMO_READ_ONLY` probes, JWT/header/query/frontend role defenses, sessions/Logout and the real UI on Mobile/Tablet/Desktop — PASS. All 190 original documents remain BSON-identical. No valid administrative production mutations were performed in this activation. [Verification scope](docs/production-activation.md).
 
 ## Author
 
